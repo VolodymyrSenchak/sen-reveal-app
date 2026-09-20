@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SenReveal — Edge states</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Space+Mono:wght@700&family=Work+Sans:wght@400;500;600&display=swap">
+<style>
+body { margin: 0; font-family: 'Work Sans', system-ui, sans-serif; background: #14101F; color: #F7F3FF; }
+a { color: #C8F24E; } a:hover { color: #DCFB86; }
+</style>
+</helmet>
+<div style="width: 860px; height: 844px; box-sizing: border-box; padding: 30px 32px; display: flex; flex-direction: column; gap: 18px; background: #14101F;">
+
+  <div style="display: flex; align-items: baseline; gap: 12px;">
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.6px;">The states that decide whether this feels solid</h1>
+    <span style="font-size: 13px; color: #8F84A8;">Same type scale, smaller frames</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; flex-grow: 1;">
+
+    <div style="border: 1.5px solid #3E3354; border-radius: 20px; background: #1B1529; padding: 20px; display: flex; flex-direction: column; gap: 13px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.9px; text-transform: uppercase; color: #C8F24E;">Asker · still waiting</div>
+      <div style="border: 1.5px solid #3E3354; border-radius: 16px; background: #221B33; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: baseline; justify-content: space-between;">
+          <span style="font-size: 14px; font-weight: 600;">Answers in</span>
+          <span style="font-family: 'Space Mono', monospace; font-size: 13.5px; font-weight: 700; color: #A99FC0;">3 / 4</span>
+        </div>
+        <div style="display: flex; height: 6px; gap: 4px;">
+          <span style="flex-grow: 1; border-radius: 999px; background: #C8F24E; display: block;"></span>
+          <span style="flex-grow: 1; border-radius: 999px; background: #C8F24E; display: block;"></span>
+          <span style="flex-grow: 1; border-radius: 999px; background: #C8F24E; display: block;"></span>
+          <span style="flex-grow: 1; border-radius: 999px; background: #2E2542; display: block;"></span>
+        </div>
+        <span style="font-size: 13px; color: #8F84A8;">Oles hasn't answered. Phone face-down on the table, probably.</span>
+      </div>
+      <button type="button" disabled style="height: 54px; border-radius: 16px; border: none; background: #2E2542; color: #6B6086; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 17px; font-weight: 700;">Show the answers</button>
+      <button type="button" style="height: 54px; border-radius: 16px; border: 1.5px solid #FF6F59; background: transparent; color: #FF6F59; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 17px; font-weight: 700; cursor: pointer;">Reveal without Oles</button>
+      <span style="font-size: 12.5px; line-height: 1.4; color: #8F84A8;">Forcing needs at least one answer on the table. The missing player simply has no card.</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; border-radius: 14px; background: #221B33;">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#A99FC0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 8v4l3 2"></path></svg>
+        <span style="font-size: 12.5px; color: #A99FC0;">Host can also skip the round if the asker goes quiet.</span>
+      </div>
+    </div>
+
+    <div style="border: 1.5px solid #3E3354; border-radius: 20px; background: #1B1529; padding: 20px; display: flex; flex-direction: column; gap: 13px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.9px; text-transform: uppercase; color: #C8F24E;">Asked out loud · connection</div>
+      <div style="border: 1.5px dashed #4A3E63; border-radius: 16px; background: #221B33; padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 9px;">
+          <div style="width: 28px; height: 28px; border-radius: 9px; background: #C8F24E; color: #14101F; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 13px; font-weight: 700;">V</div>
+          <span style="font-size: 13.5px; font-weight: 600; color: #A99FC0;">No question typed</span>
+        </div>
+        <p style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 21px; line-height: 1.2; font-weight: 700; color: #A99FC0;">Vova is asking out loud — listen up.</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 13px 15px; border-radius: 14px; background: #221B33; border: 1.5px solid #3E3354;">
+        <span style="width: 9px; height: 9px; border-radius: 999px; background: #E8B93C; display: block;"></span>
+        <span style="flex-grow: 1; font-size: 13.5px;">Reconnecting…</span>
+        <span style="font-size: 12px; color: #8F84A8;">after 3s</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 13px 15px; border-radius: 14px; background: #221B33; border: 1.5px solid #3E3354;">
+        <span style="width: 9px; height: 9px; border-radius: 999px; background: #C8F24E; display: block;"></span>
+        <span style="flex-grow: 1; font-size: 13.5px;">Slow line — refreshing every 1.5s</span>
+      </div>
+      <span style="font-size: 12.5px; line-height: 1.4; color: #8F84A8;">The socket dies every five minutes by design and comes straight back. Don't flash anything for the first three seconds; below that the player should never know.</span>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: #2E2542;">
+        <span style="width: 9px; height: 9px; border-radius: 999px; background: #6B6086; display: block;"></span>
+        <span style="font-size: 12.5px; color: #CFC6E3;">Dima went offline — his answer stays in.</span>
+      </div>
+    </div>
+
+    <div style="border: 1.5px solid #3E3354; border-radius: 20px; background: #1B1529; padding: 20px; display: flex; flex-direction: column; gap: 13px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.9px; text-transform: uppercase; color: #FF6F59;">Dead ends</div>
+      <div style="border: 1.5px solid #3E3354; border-radius: 16px; background: #221B33; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;">
+        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#FF6F59" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5v5"></path><circle cx="12" cy="16.3" r="1.1" fill="#FF6F59" stroke="none"></circle></svg>
+        <div style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 19px; font-weight: 700;">This room is over</div>
+        <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #A99FC0;">Codes live 24 hours. 042137 belongs to nobody now.</p>
+        <a href="Main.dc.html" style="box-sizing: border-box; width: 100%; height: 48px; border-radius: 14px; background: #C8F24E; color: #14101F; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 16px; font-weight: 700; text-decoration: none;">Start a fresh one</a>
+      </div>
+      <div style="border: 1.5px solid #3E3354; border-radius: 16px; background: #221B33; padding: 14px; display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 14.5px; font-weight: 600;">The host removed you</div>
+        <p style="margin: 0; font-size: 12.5px; line-height: 1.45; color: #A99FC0;">Same frame, different copy, plus a “Join again” button. Lost your phone or cleared the tab? You just rejoin — new nickname slot, score starts over.</p>
+      </div>
+      <div style="flex-grow: 1;"></div>
+      <span style="font-size: 12.5px; line-height: 1.4; color: #8F84A8;">Anything that ends the session ends it on every screen at once — nobody is left staring at a stale round.</span>
+    </div>
+
+    <div style="border: 1.5px solid #3E3354; border-radius: 20px; background: #1B1529; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.9px; text-transform: uppercase; color: #FF6F59;">Inline errors</div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="box-sizing: border-box; width: 100%; height: 48px; padding: 0 14px; border-radius: 14px; background: #221B33; border: 1.5px solid #FF6F59; display: flex; align-items: center; font-size: 15px;">Katya</div>
+        <span style="font-size: 12.5px; color: #FF6F59;">Someone online is already Katya. Add a letter.</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; gap: 6px;">
+          <span style="flex-grow: 1; height: 46px; border-radius: 12px; background: #221B33; border: 1.5px solid #FF6F59; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700;">9</span>
+          <span style="flex-grow: 1; height: 46px; border-radius: 12px; background: #221B33; border: 1.5px solid #FF6F59; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700;">1</span>
+          <span style="flex-grow: 1; height: 46px; border-radius: 12px; background: #221B33; border: 1.5px solid #FF6F59; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700;">0</span>
+          <span style="flex-grow: 1; height: 46px; border-radius: 12px; background: #221B33; border: 1.5px solid #FF6F59; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700;">0</span>
+          <span style="flex-grow: 1; height: 46px; border-radius: 12px; background: #221B33; border: 1.5px solid #FF6F59; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700;">2</span>
+          <span style="flex-grow: 1; height: 46px; border-radius: 12px; background: #221B33; border: 1.5px solid #FF6F59; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700;">4</span>
+        </div>
+        <span style="font-size: 12.5px; color: #FF6F59;">No room with that code. Check the last two digits.</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; border-radius: 13px; background: #2E2542;">
+        <span style="font-size: 12.5px; color: #FFB3A6;">Wrong password.</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; border-radius: 13px; background: #2E2542;">
+        <span style="font-size: 12.5px; color: #FFB3A6;">Room is full — 20 of 20.</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; border-radius: 13px; background: #2E2542;">
+        <span style="font-size: 12.5px; color: #CFC6E3;">Two players in the room. One more and you can start.</span>
+      </div>
+      <div style="flex-grow: 1;"></div>
+      <span style="font-size: 12.5px; line-height: 1.4; color: #8F84A8;">Errors sit under the field that caused them. Nothing modal, nothing that eats a tap.</span>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":860,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

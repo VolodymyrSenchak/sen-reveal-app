@@ -1,0 +1,42 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-09-20T12:00:00Z" },
+  "title": "SenReveal — Player App Design",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "designSystems": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 390, "h": 844, "title": "Home", "is_interactive": true },
+    "PickGame.dc.html": { "x": 470, "y": 0, "w": 390, "h": 844, "title": "Pick a game", "is_interactive": true },
+    "CreateSession.dc.html": { "x": 940, "y": 0, "w": 390, "h": 844, "title": "Start a session", "is_interactive": true },
+    "JoinSession.dc.html": { "x": 1410, "y": 0, "w": 390, "h": 844, "title": "Join a session", "is_interactive": true },
+    "Lobby.dc.html": { "x": 0, "y": 1244, "w": 390, "h": 844, "title": "Lobby", "is_interactive": true },
+    "RoundActive.dc.html": { "x": 470, "y": 1244, "w": 390, "h": 844, "title": "Asker — answering", "is_interactive": true },
+    "RoundAnswer.dc.html": { "x": 940, "y": 1244, "w": 390, "h": 844, "title": "Player — answering", "is_interactive": true },
+    "Revealed.dc.html": { "x": 1410, "y": 1244, "w": 390, "h": 844, "title": "Revealed — pick", "is_interactive": true },
+    "Result.dc.html": { "x": 0, "y": 2488, "w": 390, "h": 844, "title": "Result — resolved", "is_interactive": true },
+    "States.dc.html": { "x": 470, "y": 2488, "w": 860, "h": 844, "title": "Edge states" },
+    "Styleguide.dc.html": { "x": 1410, "y": 2488, "w": 860, "h": 844, "title": "UI kit" }
+  },
+  "order": [
+    "Main.dc.html",
+    "PickGame.dc.html",
+    "CreateSession.dc.html",
+    "JoinSession.dc.html",
+    "Lobby.dc.html",
+    "RoundActive.dc.html",
+    "RoundAnswer.dc.html",
+    "Revealed.dc.html",
+    "Result.dc.html",
+    "States.dc.html",
+    "Styleguide.dc.html"
+  ],
+  "notes": {
+    "t1": { "x": 0, "y": -300, "text": "1 · Getting in", "kind": "title1", "maxW": 1800 },
+    "t2": { "x": 0, "y": 944, "text": "2 · Playing a round", "kind": "title1", "maxW": 1800 },
+    "t3": { "x": 0, "y": 2188, "text": "3 · Result, edges, kit", "kind": "title1", "maxW": 2270 },
+    "n1": { "x": 1900, "y": 40, "w": 360, "text": "Home → Pick → Create is POST /api/sessions {gameType, nickname, password?, settings?}. Join is POST /:code/join. Both hand back playerId + playerToken — keep the token and the code in localStorage, it is the only identity there is.", "color": "green" },
+    "n2": { "x": 1900, "y": 1284, "w": 360, "text": "These three screens are one phase field: game.round.phase = answering → revealed → resolved. Which of them a player sees also depends on whether they are round.activePlayerId. Button visibility comes from canSetQuestion / canReveal / canForceReveal / canPickResult / canGoNext — never recompute the rules on the client.", "color": "blue" },
+    "n3": { "x": 2350, "y": 2548, "w": 360, "text": "One gap versus the brief: the API has no route from revealed straight to the next asker. pickResult (winner + loser) is what moves a round to resolved, and only then does nextRound rotate. So the pick screen is in — it is also where the scoreboard comes from. If you want pure reveal-and-move-on, that is an API change: a skipResult action, or a settings flag that auto-resolves.", "color": "orange" }
+  }
+}
