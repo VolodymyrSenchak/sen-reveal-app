@@ -1,0 +1,49 @@
+/* Tokens from docs/design/Styleguide.dc.html. Dark only — no light mode branch. */
+:root {
+  /* surfaces, back to front */
+  --room: #14101f;
+  --field: #1b1529;
+  --card: #221b33;
+  --chip: #2e2542;
+  --line: #3e3354;
+  --line-strong: #4a3e63;
+
+  /* accents */
+  --go: #c8f24e;
+  --go-hover: #dcfb86;
+  --worst: #ff6f59;
+  --worst-soft: #ffb3a6;
+  --warn: #e8b93c;
+
+  /* ink */
+  --text: #f7f3ff;
+  --text-2: #cfc6e3;
+  --muted: #a99fc0;
+  --faint: #8f84a8;
+  --dim: #6b6086;
+  --ghost: #5c5075;
+
+  /* type */
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Work Sans', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+
+  /* radii */
+  --r-card: 18px;
+  --r-card-lg: 22px;
+  --r-field: 16px;
+  --r-tile: 13px;
+  --r-pill: 999px;
+
+  /* touch */
+  --tap: 44px;
+  --tap-primary: 58px;
+
+  /* layout */
+  --shell: 480px;
+  --gutter: 20px;
+
+  /* motion — reveal is the only animation with weight */
+  --t-quick: 120ms;
+  --t-reveal: 180ms;
+}
