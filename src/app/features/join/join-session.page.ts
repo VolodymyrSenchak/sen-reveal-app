@@ -3,6 +3,7 @@ import { FormField, form, maxLength, required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { errorMessage, toApiError } from '../../core/api-error';
+import { gameTitle } from '../../core/games';
 import { IdentityService } from '../../core/identity.service';
 import { SessionApiService } from '../../core/session-api.service';
 import { NICKNAME_MAX_LENGTH, PASSWORD_MAX_LENGTH, SessionInfo } from '../../models';
@@ -242,7 +243,7 @@ export class JoinSessionPage {
   }
 
   protected gameLabel(info: SessionInfo): string {
-    return info.gameType === 'sen-reveal' ? 'Phrase Expose' : info.gameType;
+    return gameTitle(info.gameType);
   }
 
   protected onDigit(index: number, event: Event): void {

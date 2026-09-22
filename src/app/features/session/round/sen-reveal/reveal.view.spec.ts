@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { GameAction, SenRevealAnswerView, SenRevealView, SessionView } from '../../../models';
-import { SessionStore } from '../../../session/session.store';
+import { GameAction, SenRevealAnswerView, SenRevealView, SessionView } from '../../../../models';
+import { SessionStore } from '../../../../session/session.store';
 import { RevealView } from './reveal.view';
 
 function revealed(answers: SenRevealAnswerView[]): SessionView<SenRevealView> {

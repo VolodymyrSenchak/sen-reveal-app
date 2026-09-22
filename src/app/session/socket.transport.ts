@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { GameAction, TerminalReason } from '../models';
 import { toApiError } from '../core/api-error';
 import { ActionResult, ConnectionState, SessionTransport, terminalFor } from './session.transport';
-import { SenRevealSession } from './session.store';
+import { GameSession } from './session.store';
 
 const ACK_TIMEOUT_MS = 5000;
 
@@ -20,7 +20,7 @@ export interface SocketTransportOptions {
  */
 export class SocketTransport implements SessionTransport {
   private readonly _state = signal<ConnectionState>('closed');
-  private readonly _snapshots = new Subject<SenRevealSession>();
+  private readonly _snapshots = new Subject<GameSession>();
   private readonly _terminal = new Subject<TerminalReason>();
   private readonly _failures = signal(0);
   /** The server disconnected us for being quiet (20 min). Reconnect on interaction, not on a timer. */
@@ -82,7 +82,7 @@ export class SocketTransport implements SessionTransport {
       this._state.set('connecting');
     });
 
-    socket.on('session:state', (view) => this._snapshots.next(view as SenRevealSession));
+    socket.on('session:state', (view) => this._snapshots.next(view as GameSession));
     socket.on('session:expired', () => this.emitTerminal('expired'));
     socket.on('player:removed', (payload: { reason: string }) => {
       this.emitTerminal(terminalFor(payload?.reason) ?? 'left');

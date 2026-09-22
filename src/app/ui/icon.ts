@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 export type IconName =
   | 'arrow-right'
   | 'arrow-left'
+  | 'bars'
   | 'check'
   | 'chevron-right'
   | 'clock'
@@ -42,6 +43,12 @@ export type IconName =
         @case ('arrow-left') {
           <path d="M19 12H6" />
           <path d="M12 5l-7 7 7 7" />
+        }
+        @case ('bars') {
+          <path d="M4 18h16" />
+          <path d="M7 18V9" />
+          <path d="M12 18V5" />
+          <path d="M17 18v-6" />
         }
         @case ('check') {
           <path d="M20 6L9 17l-5-5" />

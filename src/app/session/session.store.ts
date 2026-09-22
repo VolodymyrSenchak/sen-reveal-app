@@ -1,17 +1,20 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { SenRevealView, SessionPlayerView, SessionView } from '../models';
+import { GameViewBase, RoundViewBase, SessionPlayerView, SessionView } from '../models';
 
-export type SenRevealSession = SessionView<SenRevealView>;
+export type GameSession = SessionView<GameViewBase>;
 
 /**
  * One signal holds the server's view; everything else is `computed`.
  *
  * Nothing here derives game rules. Whether a button exists is `round.canReveal`, not
  * "am I the asker and has everyone answered" — the server already decided that for this viewer.
+ *
+ * It is typed on what every game shares. A game's own screens reach their extra fields through
+ * `gameAs` / `roundAs`, which is sound because the shell picks those screens by `gameType`.
  */
 @Injectable()
 export class SessionStore {
-  private readonly _view = signal<SenRevealSession | null>(null);
+  private readonly _view = signal<GameSession | null>(null);
 
   readonly view = this._view.asReadonly();
   readonly code = computed(() => this._view()?.code ?? null);
@@ -30,6 +33,15 @@ export class SessionStore {
     return !!round && !!me && round.activePlayerId === me.playerId;
   });
   readonly pollIntervalMs = computed(() => this._view()?.poll.intervalMs ?? 3000);
+
+  /** Read inside a `computed` in a screen that the shell only ever renders for that game. */
+  gameAs<T extends GameViewBase>(): T | null {
+    return this.game() as T | null;
+  }
+
+  roundAs<T extends RoundViewBase>(): T | null {
+    return this.round() as T | null;
+  }
 
   /** Ids on the wire, names on the screen. */
   private readonly byId = computed(() => new Map(this.players().map((player) => [player.id, player])));
@@ -51,7 +63,7 @@ export class SessionStore {
    * deliberately do not bump `version`, so an online/offline change arrives as a new snapshot
    * at the same version. Dropping equal versions would freeze the presence dots.
    */
-  apply(next: SenRevealSession): void {
+  apply(next: GameSession): void {
     const current = this._view();
     if (current && next.version < current.version) {
       return;

@@ -1,4 +1,4 @@
-import { SenRevealView, SessionView, TerminalReason } from '../../models';
+import { GameViewBase, SessionView, TerminalReason } from '../../models';
 
 export type Screen = 'loading' | 'lobby' | 'ask' | 'answer' | 'reveal' | 'result' | 'paused' | 'ended';
 
@@ -7,7 +7,7 @@ export type Screen = 'loading' | 'lobby' | 'ask' | 'answer' | 'reveal' | 'result
  * Kept out of the component so the (status, phase, isAsker, terminal) table can be tested directly.
  */
 export function pickScreen(
-  view: SessionView<SenRevealView> | null,
+  view: SessionView<GameViewBase> | null,
   terminal: TerminalReason | null,
   isAsker: boolean,
 ): Screen {

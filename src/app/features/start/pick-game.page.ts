@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { GAMES } from '../../core/games';
+import { GameType } from '../../models';
 import { IconComponent } from '../../ui/icon';
 import { PageHeaderComponent } from '../../ui/page-header';
 
-/** PickGame.dc.html — only `sen-reveal` is built; the other two are wired for the same room. */
+/** PickGame.dc.html — `sen-reveal` and `number-guess` are built; `who-am-i` is still wired only. */
 @Component({
   selector: 'app-pick-game',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,48 +19,34 @@ import { PageHeaderComponent } from '../../ui/page-header';
         <p class="pick__lede">Everyone joins the same room. The game decides what people type in.</p>
       </div>
 
-      <div class="pick__list">
-        <div class="game game--ready">
-          <div class="game__top">
-            <span class="game__badge game__badge--ready">
-              <app-icon name="speech" [size]="24" [width]="2.2" />
-            </span>
-            <div class="game__body">
-              <div class="game__heading">
-                <h2 class="game__name">Phrase Expose</h2>
-                <span class="tag tag--ready">Ready</span>
+      <div class="pick__list" role="radiogroup" aria-label="Pick a game">
+        @for (game of games; track game.type) {
+          <button
+            type="button"
+            role="radio"
+            class="game game--ready"
+            [class.game--on]="selected() === game.type"
+            [attr.aria-checked]="selected() === game.type"
+            (click)="selected.set(game.type)"
+          >
+            <div class="game__top">
+              <span class="game__badge game__badge--ready">
+                <app-icon [name]="game.type === 'number-guess' ? 'bars' : 'speech'" [size]="24" [width]="2.2" />
+              </span>
+              <div class="game__body">
+                <div class="game__heading">
+                  <h2 class="game__name">{{ game.title }}</h2>
+                  <span class="tag tag--ready">Ready</span>
+                </div>
+                <p class="game__copy">{{ game.lede }}</p>
               </div>
-              <p class="game__copy">
-                The asker asks anything. Everyone writes a free-text answer in secret, then all of them flip over at
-                once.
-              </p>
             </div>
-          </div>
-          <div class="game__meta">
-            <span class="chip">3–20 players</span>
-            <span class="chip">Text answers</span>
-          </div>
-        </div>
-
-        <div class="game game--soon">
-          <div class="game__top">
-            <span class="game__badge">
-              <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.2"
-                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <path d="M4 18h16" /><path d="M7 18V9" /><path d="M12 18V5" /><path d="M17 18v-6" />
-              </svg>
-            </span>
-            <div class="game__body">
-              <div class="game__heading">
-                <h2 class="game__name">Number Guessing</h2>
-                <span class="tag tag--soon">Soon</span>
-              </div>
-              <p class="game__copy">
-                Everyone picks a number, the asker enters the true one. Closest and furthest are scored automatically.
-              </p>
+            <div class="game__meta">
+              <span class="chip">3–20 players</span>
+              <span class="chip">{{ game.inputLabel }}</span>
             </div>
-          </div>
-        </div>
+          </button>
+        }
 
         <div class="game game--soon">
           <div class="game__top">
@@ -83,8 +71,8 @@ import { PageHeaderComponent } from '../../ui/page-header';
 
       <div class="spacer"></div>
 
-      <a class="btn btn--primary" routerLink="/start/sen-reveal">Continue with Phrase Expose</a>
-      <p class="footnote">The other two are wired for the same room — just not built yet.</p>
+      <a class="btn btn--primary" [routerLink]="['/start', selected()]">Continue with {{ selectedTitle() }}</a>
+      <p class="footnote">Who Am I is wired for the same room — just not built yet.</p>
     </div>
   `,
   styles: `
@@ -111,11 +99,22 @@ import { PageHeaderComponent } from '../../ui/page-header';
       display: flex;
       flex-direction: column;
       gap: 10px;
+      text-align: left;
+      width: 100%;
     }
 
     .game--ready {
-      border: 2px solid var(--go);
+      border: 1.5px solid var(--line);
       background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color var(--t-quick) ease;
+    }
+
+    /* the picked one is the only card with the accent border, so the choice reads at a glance */
+    .game--on {
+      border: 2px solid var(--go);
+      padding: 17.5px;
     }
 
     .game--soon {
@@ -142,7 +141,7 @@ import { PageHeaderComponent } from '../../ui/page-header';
       justify-content: center;
     }
 
-    .game__badge--ready {
+    .game--on .game__badge--ready {
       background: var(--go);
       color: var(--room);
     }
@@ -191,4 +190,10 @@ import { PageHeaderComponent } from '../../ui/page-header';
     }
   `,
 })
-export class PickGamePage {}
+export class PickGamePage {
+  protected readonly games = GAMES;
+  protected readonly selected = signal<GameType>(GAMES[0].type);
+  protected readonly selectedTitle = computed(
+    () => this.games.find((game) => game.type === this.selected())?.title ?? '',
+  );
+}

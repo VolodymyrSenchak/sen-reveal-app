@@ -3,7 +3,7 @@ import { IconComponent } from './icon';
 
 /**
  * "Answers in" — one pip per answerer, readable across a table without counting,
- * plus a chip per player. Shared by the asker's screen and the answerer's.
+ * plus a chip per player. Shared by the asker's screen and the answerer's, in every game.
  */
 @Component({
   selector: 'app-answers-progress',
@@ -12,7 +12,7 @@ import { IconComponent } from './icon';
   template: `
     <div class="card answers">
       <div class="field-row">
-        <span class="answers__title">Answers in</span>
+        <span class="answers__title">{{ title() }}</span>
         <span class="mono answers__count" [class.answers__count--all]="complete()">
           {{ answered().length }} / {{ eligible().length }}
         </span>
@@ -32,7 +32,7 @@ import { IconComponent } from './icon';
               {{ nameOf()(id) }}
             </span>
           } @else {
-            <span class="chip chip--waiting">{{ nameOf()(id) }} is typing…</span>
+            <span class="chip chip--waiting">{{ nameOf()(id) }} {{ waiting() }}</span>
           }
         }
       </div>
@@ -74,6 +74,9 @@ export class AnswersProgressComponent {
   readonly eligible = input.required<string[]>();
   readonly answered = input.required<string[]>();
   readonly nameOf = input.required<(playerId: string) => string>();
+  /** Games that take something other than a written answer relabel it — "Numbers in", say. */
+  readonly title = input('Answers in');
+  readonly waiting = input('is typing…');
 
   private readonly answeredSet = computed(() => new Set(this.answered()));
   readonly complete = computed(() => this.eligible().length > 0 && this.answered().length === this.eligible().length);

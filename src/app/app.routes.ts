@@ -10,7 +10,8 @@ export const routes: Routes = [
     loadComponent: () => import('./features/start/pick-game.page').then((m) => m.PickGamePage),
   },
   {
-    path: 'start/sen-reveal',
+    // one setup screen for every game; `gameType` is what it creates the session with
+    path: 'start/:gameType',
     loadComponent: () => import('./features/start/create-session.page').then((m) => m.CreateSessionPage),
   },
   {

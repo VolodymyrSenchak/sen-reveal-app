@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
+import { gameTitle } from '../../../core/games';
 import { GameAction, MIN_PLAYERS } from '../../../models';
 import { Lobby } from '../../../session/actions';
 import { SessionStore } from '../../../session/session.store';
@@ -17,7 +18,7 @@ import { IconComponent } from '../../../ui/icon';
       <header class="session-head">
         <div>
           <div class="lobby__heading">Lobby</div>
-          <div class="lobby__sub">Phrase Expose · waiting to start</div>
+          <div class="lobby__sub">{{ gameTitle() }} · waiting to start</div>
         </div>
         <button type="button" class="icon-btn icon-btn--outlined" aria-label="Leave the session" (click)="exit.emit()">
           <app-icon name="x" [size]="19" [width]="2.2" />
@@ -274,6 +275,8 @@ export class LobbyView implements OnInit {
   protected readonly start = Lobby.start;
   protected readonly kick = Lobby.kick;
   protected readonly transferHost = Lobby.transferHost;
+
+  protected readonly gameTitle = computed(() => gameTitle(this.store.view()?.gameType));
 
   private readonly destroyRef = inject(DestroyRef);
 

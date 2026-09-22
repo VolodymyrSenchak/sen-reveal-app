@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { FormField, form, maxLength, required } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { errorMessage, toApiError } from '../../core/api-error';
+import { gameInfo } from '../../core/games';
 import { IdentityService } from '../../core/identity.service';
 import { SessionApiService } from '../../core/session-api.service';
-import { MAX_PLAYERS, MIN_PLAYERS, NICKNAME_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '../../models';
+import { GameType, MAX_PLAYERS, MIN_PLAYERS, NICKNAME_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '../../models';
 import { PageHeaderComponent } from '../../ui/page-header';
 
-/** CreateSession.dc.html */
+/** CreateSession.dc.html — one screen for every game; `/start/:gameType` says which. */
 @Component({
   selector: 'app-create-session',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,7 +20,7 @@ import { PageHeaderComponent } from '../../ui/page-header';
 
       <div class="stack">
         <h1 class="create__title">Set up the room</h1>
-        <p class="create__lede">Phrase Expose · you'll be the host and get the six-digit code on the next screen.</p>
+        <p class="create__lede">{{ title() }} · you'll be the host and get the six-digit code on the next screen.</p>
       </div>
 
       <div class="stack">
@@ -222,13 +223,25 @@ import { PageHeaderComponent } from '../../ui/page-header';
     }
   `,
 })
-export class CreateSessionPage {
+export class CreateSessionPage implements OnInit {
   private readonly api = inject(SessionApiService);
   private readonly identity = inject(IdentityService);
   private readonly router = inject(Router);
 
+  /** `/start/:gameType`, bound from the route. */
+  readonly gameType = input.required<GameType>();
+
   protected readonly nicknameMax = NICKNAME_MAX_LENGTH;
   protected readonly minPlayers = MIN_PLAYERS;
+
+  protected readonly title = computed(() => gameInfo(this.gameType())?.title ?? '');
+
+  ngOnInit(): void {
+    // a hand-typed /start/whatever has no game to create; send them back to the choice
+    if (!gameInfo(this.gameType())) {
+      void this.router.navigate(['/start']);
+    }
+  }
 
   protected readonly usePassword = signal(false);
   protected readonly busy = signal(false);
@@ -277,7 +290,7 @@ export class CreateSessionPage {
     try {
       const result = await firstValueFrom(
         this.api.create({
-          gameType: 'sen-reveal',
+          gameType: this.gameType(),
           nickname: trimmed,
           ...(this.usePassword() && password ? { password } : {}),
           settings: { maxPlayers, allowJoinInProgress },

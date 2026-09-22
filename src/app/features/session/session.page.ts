@@ -6,13 +6,17 @@ import { GameAction, TerminalReason } from '../../models';
 import { Lobby } from '../../session/actions';
 import { SessionStore } from '../../session/session.store';
 import { TransportManager } from '../../session/transport.manager';
-import { AnswerView } from './round/answer.view';
-import { AskView } from './round/ask.view';
 import { EndedView } from './ended.view';
 import { LobbyView } from './lobby/lobby.view';
+import { NumberGuessAskView } from './round/number-guess/ask.view';
+import { NumberGuessGuessView } from './round/number-guess/guess.view';
+import { NumberGuessResultView } from './round/number-guess/result.view';
+import { NumberGuessRevealView } from './round/number-guess/reveal.view';
 import { PausedView } from './paused.view';
-import { ResultView } from './round/result.view';
-import { RevealView } from './round/reveal.view';
+import { AnswerView } from './round/sen-reveal/answer.view';
+import { AskView } from './round/sen-reveal/ask.view';
+import { ResultView } from './round/sen-reveal/result.view';
+import { RevealView } from './round/sen-reveal/reveal.view';
 import { pickScreen } from './screen';
 
 
@@ -28,7 +32,19 @@ const TOAST_MS = 3500;
   selector: 'app-session',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SessionStore, TransportManager],
-  imports: [LobbyView, AskView, AnswerView, RevealView, ResultView, EndedView, PausedView],
+  imports: [
+    LobbyView,
+    AskView,
+    AnswerView,
+    RevealView,
+    ResultView,
+    NumberGuessAskView,
+    NumberGuessGuessView,
+    NumberGuessRevealView,
+    NumberGuessResultView,
+    EndedView,
+    PausedView,
+  ],
   template: `
     @switch (screen()) {
       @case ('loading') {
@@ -40,16 +56,32 @@ const TOAST_MS = 3500;
         <app-lobby-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
       }
       @case ('ask') {
-        <app-ask-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        @if (isNumberGuess()) {
+          <app-ng-ask-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        } @else {
+          <app-ask-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        }
       }
       @case ('answer') {
-        <app-answer-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        @if (isNumberGuess()) {
+          <app-ng-guess-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        } @else {
+          <app-answer-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        }
       }
       @case ('reveal') {
-        <app-reveal-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        @if (isNumberGuess()) {
+          <app-ng-reveal-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        } @else {
+          <app-reveal-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        }
       }
       @case ('result') {
-        <app-result-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        @if (isNumberGuess()) {
+          <app-ng-result-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        } @else {
+          <app-result-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+        }
       }
       @case ('paused') {
         <app-paused-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
@@ -92,6 +124,12 @@ export class SessionPage implements OnInit {
   protected readonly screen = computed(() =>
     pickScreen(this.store.view(), this.transport.terminal(), this.store.isAsker()),
   );
+
+  /**
+   * The one place the shell cares which game it is: the four round screens come in a set per game.
+   * Everything around them (lobby, paused, ended, the store, the transport) is game-agnostic.
+   */
+  protected readonly isNumberGuess = computed(() => this.store.view()?.gameType === 'number-guess');
 
   ngOnInit(): void {
     const code = this.code();

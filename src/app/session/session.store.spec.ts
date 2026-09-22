@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SenRevealView, SessionView } from '../models';
+import { SenRevealRoundView, SenRevealView, SessionView } from '../models';
 import { SessionStore } from './session.store';
 
 function view(overrides: Partial<SessionView<SenRevealView>> = {}): SessionView<SenRevealView> {
@@ -49,7 +49,7 @@ describe('SessionStore', () => {
     store.apply(view({ version: 5, game: gameWith({ answers: [{ playerId: 'p2', value: 'hi' }] }) }));
     store.apply(view({ version: 6, game: gameWith({ answers: null }) }));
 
-    expect(store.round()?.answers).toBeNull();
+    expect(store.roundAs<SenRevealRoundView>()?.answers).toBeNull();
   });
 
   it('falls back to "(left)" for a player who is gone from the roster', () => {

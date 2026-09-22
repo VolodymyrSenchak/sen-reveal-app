@@ -1,15 +1,15 @@
 import { Signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiError, GameAction, TerminalReason } from '../models';
-import { SenRevealSession } from './session.store';
+import { GameSession } from './session.store';
 
 export type ConnectionState = 'connecting' | 'live' | 'degraded' | 'closed';
 
-export type ActionResult = { ok: true; session: SenRevealSession } | { ok: false; error: ApiError };
+export type ActionResult = { ok: true; session: GameSession } | { ok: false; error: ApiError };
 
 export interface SessionTransport {
   readonly state: Signal<ConnectionState>;
-  readonly snapshots: Observable<SenRevealSession>;
+  readonly snapshots: Observable<GameSession>;
   readonly terminal: Observable<TerminalReason>;
   dispatch(action: GameAction): Promise<ActionResult>;
   connect(): void;

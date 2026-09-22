@@ -4,7 +4,7 @@ import { APP_CONFIG } from '../core/api.config';
 import { SessionApiService } from '../core/session-api.service';
 import { GameAction, TerminalReason } from '../models';
 import { PollingTransport } from './polling.transport';
-import { SenRevealSession, SessionStore } from './session.store';
+import { GameSession, SessionStore } from './session.store';
 import { ActionResult, ConnectionState } from './session.transport';
 import { SocketTransport } from './socket.transport';
 import { VisibilityService } from './visibility.service';
@@ -94,7 +94,7 @@ export class TransportManager {
       isHidden: () => !this.visibility.visible(),
     });
     this.polling = polling;
-    this.subscriptions.add(polling.snapshots.subscribe((view: SenRevealSession) => this.store.apply(view)));
+    this.subscriptions.add(polling.snapshots.subscribe((view: GameSession) => this.store.apply(view)));
     this.subscriptions.add(polling.terminal.subscribe((reason) => this.onTerminal(reason)));
 
     this.socket.set(socket);

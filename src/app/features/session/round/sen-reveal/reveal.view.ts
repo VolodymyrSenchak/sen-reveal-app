@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, output } from '@angular/core';
-import { GameAction } from '../../../models';
-import { SenReveal } from '../../../session/actions';
-import { SessionStore } from '../../../session/session.store';
-import { ConnectionState } from '../../../session/session.transport';
-import { AvatarComponent } from '../../../ui/avatar';
-import { SessionTopComponent } from '../../../ui/session-top';
+import { GameAction, SenRevealRoundView } from '../../../../models';
+import { SenReveal } from '../../../../session/actions';
+import { SessionStore } from '../../../../session/session.store';
+import { ConnectionState } from '../../../../session/session.transport';
+import { AvatarComponent } from '../../../../ui/avatar';
+import { SessionTopComponent } from '../../../../ui/session-top';
 
 /**
  * Revealed.dc.html — `phase: 'revealed'`. Everyone sees the same cards; only the asker
@@ -15,7 +15,7 @@ import { SessionTopComponent } from '../../../ui/session-top';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SessionTopComponent, AvatarComponent],
   template: `
-    @if (store.round(); as round) {
+    @if (round(); as round) {
       <div class="screen">
         <app-session-top
           [code]="store.code() ?? ''"
@@ -222,17 +222,20 @@ export class RevealView {
   readonly act = output<GameAction>();
   readonly exit = output<void>();
 
+  /** The shell only renders this view for `sen-reveal`, so the narrowing holds. */
+  protected readonly round = computed(() => this.store.roundAs<SenRevealRoundView>());
+
   protected readonly asker = computed(() => this.store.askerNickname());
   protected readonly nameOf = computed(() => this.store.nicknameOf());
-  protected readonly answers = computed(() => this.store.round()?.answers ?? []);
+  protected readonly answers = computed(() => this.round()?.answers ?? []);
 
   /** Cleared when the round moves on, so a new reveal never starts with last round's picks. */
   protected readonly winnerId = linkedSignal<number, string | null>({
-    source: () => this.store.round()?.number ?? 0,
+    source: () => this.round()?.number ?? 0,
     computation: () => null,
   });
   protected readonly loserId = linkedSignal<number, string | null>({
-    source: () => this.store.round()?.number ?? 0,
+    source: () => this.round()?.number ?? 0,
     computation: () => null,
   });
 

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, output } from '@angular/core';
-import { DEFAULT_MAX_ANSWER_LENGTH, GameAction } from '../../../models';
-import { SenReveal } from '../../../session/actions';
-import { SessionStore } from '../../../session/session.store';
-import { ConnectionState } from '../../../session/session.transport';
-import { AnswersProgressComponent } from '../../../ui/answers-progress';
-import { AvatarComponent } from '../../../ui/avatar';
-import { IconComponent } from '../../../ui/icon';
-import { SessionTopComponent } from '../../../ui/session-top';
+import { DEFAULT_MAX_ANSWER_LENGTH, GameAction, SenRevealRoundView } from '../../../../models';
+import { SenReveal } from '../../../../session/actions';
+import { SessionStore } from '../../../../session/session.store';
+import { ConnectionState } from '../../../../session/session.transport';
+import { AnswersProgressComponent } from '../../../../ui/answers-progress';
+import { AvatarComponent } from '../../../../ui/avatar';
+import { IconComponent } from '../../../../ui/icon';
+import { SessionTopComponent } from '../../../../ui/session-top';
 
 /** RoundAnswer.dc.html — `phase: 'answering'`, the viewer is in `eligiblePlayerIds`. */
 @Component({
@@ -14,7 +14,7 @@ import { SessionTopComponent } from '../../../ui/session-top';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SessionTopComponent, AnswersProgressComponent, AvatarComponent, IconComponent],
   template: `
-    @if (store.round(); as round) {
+    @if (round(); as round) {
       <div class="screen">
         <app-session-top
           [code]="store.code() ?? ''"
@@ -166,19 +166,22 @@ export class AnswerView {
   readonly act = output<GameAction>();
   readonly exit = output<void>();
 
+  /** The shell only renders this view for `sen-reveal`, so the narrowing holds. */
+  protected readonly round = computed(() => this.store.roundAs<SenRevealRoundView>());
+
   protected readonly circle = computed(() => this.store.game()?.circle.number ?? 1);
   protected readonly asker = computed(() => this.store.askerNickname());
   protected readonly answerMax = computed(() => this.store.settings()?.maxAnswerLength ?? DEFAULT_MAX_ANSWER_LENGTH);
 
   /** Seeded from `myAnswer` once per round, then the textarea is the player's own. */
   protected readonly draft = linkedSignal<number, string>({
-    source: () => this.store.round()?.number ?? 0,
-    computation: () => this.store.round()?.myAnswer ?? '',
+    source: () => this.round()?.number ?? 0,
+    computation: () => this.round()?.myAnswer ?? '',
   });
 
   protected readonly canSend = computed(() => {
     const value = this.draft().trim();
-    return value.length > 0 && value !== this.store.round()?.myAnswer;
+    return value.length > 0 && value !== this.round()?.myAnswer;
   });
 
   protected submit(): void {

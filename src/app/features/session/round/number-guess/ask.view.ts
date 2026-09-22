@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, linkedSignal, output } from '@angular/core';
-import { GameAction, MAX_QUESTION_LENGTH } from '../../../models';
-import { SenReveal } from '../../../session/actions';
-import { SessionStore } from '../../../session/session.store';
-import { ConnectionState } from '../../../session/session.transport';
-import { AnswersProgressComponent } from '../../../ui/answers-progress';
-import { IconComponent } from '../../../ui/icon';
-import { SessionTopComponent } from '../../../ui/session-top';
+import { GameAction, MAX_QUESTION_LENGTH } from '../../../../models';
+import { NumberGuess } from '../../../../session/actions';
+import { SessionStore } from '../../../../session/session.store';
+import { ConnectionState } from '../../../../session/session.transport';
+import { AnswersProgressComponent } from '../../../../ui/answers-progress';
+import { IconComponent } from '../../../../ui/icon';
+import { SessionTopComponent } from '../../../../ui/session-top';
 
 /** Typing the question sends one action per pause, not one per keystroke. */
 const QUESTION_DEBOUNCE_MS = 500;
 
-/** RoundActive.dc.html — `phase: 'answering'`, the viewer is `round.activePlayerId`. */
+/** `number-guess`, `phase: 'answering'`, the viewer is `round.activePlayerId`. */
 @Component({
-  selector: 'app-ask-view',
+  selector: 'app-ng-ask-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SessionTopComponent, AnswersProgressComponent, IconComponent],
   template: `
@@ -31,7 +31,7 @@ const QUESTION_DEBOUNCE_MS = 500;
           <app-icon name="question" [size]="26" [width]="2.3" />
           <div>
             <div class="ask__turnTitle">Your turn to ask</div>
-            <div class="ask__turnCopy">Everyone else is writing. You can't peek either.</div>
+            <div class="ask__turnCopy">Ask something with a number for an answer — one you know.</div>
           </div>
         </div>
 
@@ -51,7 +51,7 @@ const QUESTION_DEBOUNCE_MS = 500;
           ></textarea>
           <span class="hint">
             Leave it empty and just ask out loud — everyone will see “{{ store.me()?.nickname }} is asking out loud”.
-            You can still change it until you reveal.
+            You type the right number after the guesses are on the table.
           </span>
         </div>
 
@@ -59,6 +59,8 @@ const QUESTION_DEBOUNCE_MS = 500;
           [eligible]="round.eligiblePlayerIds"
           [answered]="round.answeredPlayerIds"
           [nameOf]="store.nicknameOf()"
+          title="Numbers in"
+          waiting="is picking a number…"
         />
 
         <div class="card card--dashed ask__lock">
@@ -71,20 +73,20 @@ const QUESTION_DEBOUNCE_MS = 500;
         @if (round.canReveal) {
           <button class="btn btn--primary" type="button" (click)="act.emit(reveal(false))">
             <app-icon name="eye" [size]="21" [width]="2.4" />
-            Show the answers
+            Show the guesses
           </button>
         } @else {
           <!-- the design shows this one disabled rather than absent: it is the thing being waited on -->
           <button class="btn btn--primary" type="button" disabled>
             <app-icon name="eye" [size]="21" [width]="2.4" />
-            Show the answers
+            Show the guesses
           </button>
           @if (round.canForceReveal) {
             <button class="btn btn--danger" type="button" (click)="act.emit(reveal(true))">
               Reveal without {{ missingLabel() }}
             </button>
             <span class="hint">
-              Forcing needs at least one answer on the table. The missing player simply has no card.
+              Forcing needs at least one guess on the table. The missing player simply has no number.
             </span>
           }
         }
@@ -130,7 +132,7 @@ const QUESTION_DEBOUNCE_MS = 500;
     }
   `,
 })
-export class AskView {
+export class NumberGuessAskView {
   protected readonly store = inject(SessionStore);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -141,8 +143,8 @@ export class AskView {
   readonly exit = output<void>();
 
   protected readonly questionMax = MAX_QUESTION_LENGTH;
-  protected readonly reveal = SenReveal.reveal;
-  protected readonly skipRound = SenReveal.skipRound;
+  protected readonly reveal = NumberGuess.reveal;
+  protected readonly skipRound = NumberGuess.skipRound;
 
   protected readonly circle = computed(() => this.store.game()?.circle.number ?? 1);
 
@@ -176,9 +178,9 @@ export class AskView {
   protected readonly lockCopy = computed(() => {
     const count = this.store.round()?.answeredPlayerIds.length ?? 0;
     if (count === 0) {
-      return 'Nothing has come in yet. When it does, nobody sees it — you included.';
+      return 'No numbers yet. When they come in, nobody sees them — you included.';
     }
-    const noun = count === 1 ? 'answer is' : 'answers are';
+    const noun = count === 1 ? 'number is' : 'numbers are';
     return `${count} ${noun} sitting sealed. Nobody has seen a single one — you included.`;
   });
 
@@ -195,7 +197,7 @@ export class AskView {
     this.debounce = setTimeout(() => {
       this.debounce = null;
       // an empty string resets the question to null, which brings the out-loud placeholder back
-      this.act.emit(SenReveal.setQuestion(text.trim()));
+      this.act.emit(NumberGuess.setQuestion(text.trim()));
     }, QUESTION_DEBOUNCE_MS);
   }
 

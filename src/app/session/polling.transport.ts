@@ -4,7 +4,7 @@ import { toApiError } from '../core/api-error';
 import { SessionApiService } from '../core/session-api.service';
 import { GameAction, TerminalReason } from '../models';
 import { ActionResult, ConnectionState, SessionTransport, terminalFor } from './session.transport';
-import { SenRevealSession } from './session.store';
+import { GameSession } from './session.store';
 
 /** While the tab is hidden the round can wait — the server's own interval only covers foreground. */
 const HIDDEN_INTERVAL_MS = 10_000;
@@ -26,7 +26,7 @@ export interface PollingTransportOptions {
  */
 export class PollingTransport implements SessionTransport {
   private readonly _state = signal<ConnectionState>('closed');
-  private readonly _snapshots = new Subject<SenRevealSession>();
+  private readonly _snapshots = new Subject<GameSession>();
   private readonly _terminal = new Subject<TerminalReason>();
 
   readonly state = this._state.asReadonly();

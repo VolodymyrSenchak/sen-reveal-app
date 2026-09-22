@@ -23,8 +23,9 @@ export interface SessionPlayerView {
 export interface CoreSettingsView {
   maxPlayers: number;
   allowJoinInProgress: boolean;
-  /** sen-reveal adds these two. */
+  /** Every game adds its own settings here; these are the ones the UI reads. */
   minPlayers?: number;
+  /** sen-reveal only. */
   maxAnswerLength?: number;
 }
 
