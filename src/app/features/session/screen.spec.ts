@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { SenRevealPhase, SenRevealView, SessionStatus, SessionView, TerminalReason } from '../../models';
+import {
+  SenRevealPhase,
+  SenRevealView,
+  SessionStatus,
+  SessionView,
+  TerminalReason,
+  WhoAmIPhase,
+  WhoAmIView,
+} from '../../models';
 import { pickScreen, Screen } from './screen';
 
 function session(status: SessionStatus, phase: SenRevealPhase | null): SessionView<SenRevealView> {
@@ -77,4 +85,45 @@ describe('pickScreen', () => {
       expect(pickScreen(view, terminal, isAsker)).toBe(expected);
     });
   }
+});
+
+function whoAmI(phase: WhoAmIPhase, canSubmitName: boolean): SessionView<WhoAmIView> {
+  const base = session('in_progress', 'answering');
+  return {
+    ...base,
+    gameType: 'who-am-i',
+    game: {
+      round: {
+        number: 1,
+        phase,
+        playerIds: ['p1', 'p2', 'p3'],
+        eligiblePlayerIds: ['p1', 'p2', 'p3'],
+        answeredPlayerIds: [],
+        isPlaying: true,
+        myTargetId: 'p2',
+        myGivenName: null,
+        cards: canSubmitName ? null : [],
+        startedAt: '2026-01-01T20:05:00.000Z',
+        revealedAt: phase === 'revealed' ? '2026-01-01T20:09:00.000Z' : null,
+        canSubmitName,
+        canReveal: false,
+        canStartNextRound: false,
+      },
+    },
+  };
+}
+
+describe('pickScreen for who-am-i', () => {
+  it('sends a player who still owes a name to the naming screen', () => {
+    expect(pickScreen(whoAmI('playing', true), null, false)).toBe('name');
+  });
+
+  it('shows the table to everyone else, before and after the reveal', () => {
+    expect(pickScreen(whoAmI('playing', false), null, false)).toBe('board');
+    expect(pickScreen(whoAmI('revealed', false), null, false)).toBe('board');
+  });
+
+  it('still lets a terminal reason win', () => {
+    expect(pickScreen(whoAmI('playing', true), 'kicked', false)).toBe('ended');
+  });
 });

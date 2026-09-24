@@ -32,3 +32,12 @@ export const NumberGuess = {
   nextRound: (): GameAction => ({ type: 'number-guess.nextRound', payload: {} }),
   skipRound: (): GameAction => ({ type: 'number-guess.skipRound', payload: {} }),
 } as const;
+
+export const WhoAmI = {
+  /** Final once it's in: the table opens for the giver right after. */
+  submitName: (name: string): GameAction => ({ type: 'who-am-i.submitName', payload: { name } }),
+  /** Host-only. Flips every card, the viewer's own included. */
+  reveal: (): GameAction => ({ type: 'who-am-i.reveal', payload: {} }),
+  /** Host-only, after the reveal: a fresh deal for everybody in the room. */
+  nextRound: (): GameAction => ({ type: 'who-am-i.nextRound', payload: {} }),
+} as const;

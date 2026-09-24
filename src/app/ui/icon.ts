@@ -12,6 +12,7 @@ export type IconName =
   | 'eye'
   | 'lock'
   | 'more'
+  | 'person'
   | 'question'
   | 'share'
   | 'speech'
@@ -79,6 +80,10 @@ export type IconName =
           <circle cx="5" cy="12" r="2" fill="currentColor" stroke="none" />
           <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" />
           <circle cx="19" cy="12" r="2" fill="currentColor" stroke="none" />
+        }
+        @case ('person') {
+          <circle cx="12" cy="9" r="4" />
+          <path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5" />
         }
         @case ('question') {
           <path d="M9 9a3 3 0 1 1 4 2.8c-.7.3-1 .9-1 1.7v.5" />

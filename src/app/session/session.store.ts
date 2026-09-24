@@ -11,6 +11,7 @@ export type GameSession = SessionView<GameViewBase>;
  *
  * It is typed on what every game shares. A game's own screens reach their extra fields through
  * `gameAs` / `roundAs`, which is sound because the shell picks those screens by `gameType`.
+ * A game with no asker and no scoreboard (who-am-i) reads its whole view through `gameAs`.
  */
 @Injectable()
 export class SessionStore {
@@ -35,8 +36,8 @@ export class SessionStore {
   readonly pollIntervalMs = computed(() => this._view()?.poll.intervalMs ?? 3000);
 
   /** Read inside a `computed` in a screen that the shell only ever renders for that game. */
-  gameAs<T extends GameViewBase>(): T | null {
-    return this.game() as T | null;
+  gameAs<T>(): T | null {
+    return this.game() as unknown as T | null;
   }
 
   roundAs<T extends RoundViewBase>(): T | null {

@@ -2,10 +2,16 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import { RouterLink } from '@angular/router';
 import { GAMES } from '../../core/games';
 import { GameType } from '../../models';
-import { IconComponent } from '../../ui/icon';
+import { IconComponent, IconName } from '../../ui/icon';
 import { PageHeaderComponent } from '../../ui/page-header';
 
-/** PickGame.dc.html — `sen-reveal` and `number-guess` are built; `who-am-i` is still wired only. */
+/** Anything not listed wears the speech bubble — that is sen-reveal. */
+const GAME_ICONS: Partial<Record<GameType, IconName>> = {
+  'number-guess': 'bars',
+  'who-am-i': 'person',
+};
+
+/** PickGame.dc.html — every game in the catalogue is built and pickable. */
 @Component({
   selector: 'app-pick-game',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +37,7 @@ import { PageHeaderComponent } from '../../ui/page-header';
           >
             <div class="game__top">
               <span class="game__badge game__badge--ready">
-                <app-icon [name]="game.type === 'number-guess' ? 'bars' : 'speech'" [size]="24" [width]="2.2" />
+                <app-icon [name]="iconOf(game.type)" [size]="24" [width]="2.2" />
               </span>
               <div class="game__body">
                 <div class="game__heading">
@@ -47,32 +53,12 @@ import { PageHeaderComponent } from '../../ui/page-header';
             </div>
           </button>
         }
-
-        <div class="game game--soon">
-          <div class="game__top">
-            <span class="game__badge">
-              <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.2"
-                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <circle cx="12" cy="9" r="4" /><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5" />
-              </svg>
-            </span>
-            <div class="game__body">
-              <div class="game__heading">
-                <h2 class="game__name">Who Am I</h2>
-                <span class="tag tag--soon">Soon</span>
-              </div>
-              <p class="game__copy">
-                Everyone secretly names someone else. You see every name on the table except the one stuck to you.
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div class="spacer"></div>
 
       <a class="btn btn--primary" [routerLink]="['/start', selected()]">Continue with {{ selectedTitle() }}</a>
-      <p class="footnote">Who Am I is wired for the same room — just not built yet.</p>
+      <p class="footnote">Everyone who joins your code plays the game you pick here.</p>
     </div>
   `,
   styles: `
@@ -117,12 +103,6 @@ import { PageHeaderComponent } from '../../ui/page-header';
       padding: 17.5px;
     }
 
-    .game--soon {
-      border: 1.5px solid var(--line);
-      background: var(--field);
-      color: var(--faint);
-    }
-
     .game__top {
       display: flex;
       align-items: flex-start;
@@ -162,19 +142,11 @@ import { PageHeaderComponent } from '../../ui/page-header';
       letter-spacing: -0.3px;
     }
 
-    .game--soon .game__name {
-      color: var(--muted);
-    }
-
     .game__copy {
       margin-top: 5px;
       font-size: 14px;
       line-height: 1.45;
       color: var(--text-2);
-    }
-
-    .game--soon .game__copy {
-      color: var(--faint);
     }
 
     .game__meta {
@@ -192,6 +164,7 @@ import { PageHeaderComponent } from '../../ui/page-header';
 })
 export class PickGamePage {
   protected readonly games = GAMES;
+  protected readonly iconOf = (type: GameType): IconName => GAME_ICONS[type] ?? 'speech';
   protected readonly selected = signal<GameType>(GAMES[0].type);
   protected readonly selectedTitle = computed(
     () => this.games.find((game) => game.type === this.selected())?.title ?? '',

@@ -22,6 +22,12 @@ export const GAMES: readonly GameInfo[] = [
     inputLabel: 'Numbers only',
     lede: 'Everyone picks a number, the asker enters the true one. Closest and furthest are scored automatically.',
   },
+  {
+    type: 'who-am-i',
+    title: 'Who Am I',
+    inputLabel: 'Famous names',
+    lede: 'Everyone secretly names someone else. You see every name on the table except the one stuck to you.',
+  },
 ];
 
 export function gameInfo(type: GameType | null | undefined): GameInfo | null {

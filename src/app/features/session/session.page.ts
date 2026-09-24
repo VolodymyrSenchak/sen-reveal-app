@@ -17,6 +17,8 @@ import { AnswerView } from './round/sen-reveal/answer.view';
 import { AskView } from './round/sen-reveal/ask.view';
 import { ResultView } from './round/sen-reveal/result.view';
 import { RevealView } from './round/sen-reveal/reveal.view';
+import { WhoAmIBoardView } from './round/who-am-i/board.view';
+import { WhoAmINameView } from './round/who-am-i/name.view';
 import { pickScreen } from './screen';
 
 
@@ -42,6 +44,8 @@ const TOAST_MS = 3500;
     NumberGuessGuessView,
     NumberGuessRevealView,
     NumberGuessResultView,
+    WhoAmINameView,
+    WhoAmIBoardView,
     EndedView,
     PausedView,
   ],
@@ -82,6 +86,12 @@ const TOAST_MS = 3500;
         } @else {
           <app-result-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
         }
+      }
+      @case ('name') {
+        <app-wai-name-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
+      }
+      @case ('board') {
+        <app-wai-board-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
       }
       @case ('paused') {
         <app-paused-view [banner]="banner()" [toast]="toast()" (act)="dispatch($event)" (exit)="leave()" />
@@ -127,6 +137,7 @@ export class SessionPage implements OnInit {
 
   /**
    * The one place the shell cares which game it is: the four round screens come in a set per game.
+   * (who-am-i has its own two, 'name' and 'board', which `pickScreen` already routes by game type.)
    * Everything around them (lobby, paused, ended, the store, the transport) is game-agnostic.
    */
   protected readonly isNumberGuess = computed(() => this.store.view()?.gameType === 'number-guess');
