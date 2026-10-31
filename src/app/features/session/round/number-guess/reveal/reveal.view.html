@@ -1,0 +1,72 @@
+@if (round(); as round) {
+  <div class="screen">
+    <app-session-top
+      [code]="store.code() ?? ''"
+      [subtitle]="'Round ' + round.number + ' · revealed'"
+      [banner]="banner()"
+      [pollIntervalMs]="store.pollIntervalMs()"
+      [toast]="toast()"
+      (exit)="exit.emit()"
+    />
+
+    <div class="reveal__question">
+      <app-avatar [nickname]="asker()" [isHost]="true" [size]="28" />
+      <p class="reveal__questionText">
+        {{ round.question ?? asker() + ' asked out loud.' }}
+      </p>
+    </div>
+
+    <div>
+      @if (round.canSetCorrectAnswer) {
+        <h1 class="reveal__title">Now the right answer</h1>
+        <p class="reveal__lede">
+          Type it in, {{ store.me()?.nickname }}. The game works out who is closest and who is furthest —
+          you don't pick anyone.
+        </p>
+      } @else {
+        <h1 class="reveal__title">The guesses</h1>
+        <p class="reveal__lede">{{ asker() }} is entering the right answer.</p>
+      }
+    </div>
+
+    <ul class="reveal__cards" aria-live="polite">
+      @for (guess of guesses(); track guess.playerId; let i = $index) {
+        <li class="guessCard" [style.--delay.ms]="i * 180">
+          <app-avatar [nickname]="nameOf()(guess.playerId)" [size]="30" />
+          <span class="guessCard__name">{{ nameOf()(guess.playerId) }}</span>
+          <span class="guessCard__value mono">{{ format(guess.value) }}</span>
+        </li>
+      }
+    </ul>
+
+    <div class="spacer"></div>
+
+    @if (round.canSetCorrectAnswer) {
+      <div class="stack">
+        <label class="label" for="answer">The right answer</label>
+        <input
+          id="answer"
+          class="input reveal__answer mono"
+          type="number"
+          inputmode="decimal"
+          autocomplete="off"
+          step="any"
+          placeholder="0"
+          [class.input--invalid]="!!error()"
+          [value]="draft()"
+          (input)="draft.set($any($event.target).value)"
+          (keydown.enter)="confirm()"
+        />
+        @if (error(); as message) {
+          <span class="field-error">{{ message }}</span>
+        }
+      </div>
+      <button class="btn btn--primary" type="button" [disabled]="!canConfirm()" (click)="confirm()">
+        Score the round
+      </button>
+      <p class="footnote">Final — no take-backs. Everyone is looking at the same {{ guesses().length }} numbers.</p>
+    } @else {
+      <p class="footnote">Nothing for you to do but defend your number out loud.</p>
+    }
+  </div>
+}

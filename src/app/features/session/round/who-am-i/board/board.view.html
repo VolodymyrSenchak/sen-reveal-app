@@ -1,0 +1,80 @@
+@if (round(); as round) {
+  <div class="screen">
+    <app-session-top
+      [code]="store.code() ?? ''"
+      [subtitle]="'Round ' + round.number + (revealed() ? ' · revealed' : ' · guessing')"
+      [banner]="banner()"
+      [pollIntervalMs]="store.pollIntervalMs()"
+      [toast]="toast()"
+      (exit)="exit.emit()"
+    />
+
+    <div>
+      @if (revealed()) {
+        <h1 class="board__title">Cards up</h1>
+        <p class="board__lede">Everyone can see who they were.</p>
+      } @else if (!round.isPlaying) {
+        <h1 class="board__title">You're watching</h1>
+        <p class="board__lede">You came in mid-round, so you see every card. You're dealt in next round.</p>
+      } @else {
+        <h1 class="board__title">Who are you?</h1>
+        <p class="board__lede">Every card on the table but yours. Ask yes-or-no questions out loud to work it out.</p>
+      }
+    </div>
+
+    <ul class="board__cards" aria-live="polite">
+      @for (card of round.cards ?? []; track card.playerId) {
+        <li
+          class="whoCard"
+          [class.whoCard--hidden]="card.isMine && !revealed()"
+          [class.whoCard--mine]="card.isMine && revealed()"
+          [class.whoCard--empty]="!card.name && !card.isMine"
+        >
+          <div class="whoCard__head">
+            <app-avatar [nickname]="nameOf()(card.playerId)" [size]="28" />
+            <span class="whoCard__player">
+              {{ nameOf()(card.playerId) }}
+              @if (card.isMine) {
+                <span class="whoCard__you">(you)</span>
+              }
+            </span>
+          </div>
+
+          @if (card.isMine && !revealed()) {
+            <div class="whoCard__hiddenBody">
+              <app-icon name="question" [size]="26" [width]="2.4" />
+              <span>Face down until {{ host() }} reveals</span>
+            </div>
+          } @else if (card.name) {
+            <p class="whoCard__name">{{ card.name }}</p>
+            <p class="whoCard__from">from {{ nameOf()(card.givenById) }}</p>
+          } @else {
+            <p class="whoCard__missing">{{ revealed() ? 'Nobody named them' : 'Waiting for a name…' }}</p>
+          }
+        </li>
+      }
+    </ul>
+
+    <div class="spacer"></div>
+
+    @if (round.canReveal) {
+      <button class="btn btn--primary" type="button" (click)="act.emit(reveal())">
+        <app-icon name="eye" [size]="19" [width]="2.4" />
+        Reveal all cards
+      </button>
+      <p class="footnote">{{ revealHint() }}</p>
+    } @else if (round.canStartNextRound) {
+      <button class="btn btn--primary" type="button" (click)="act.emit(nextRound())">
+        New round
+        <app-icon name="arrow-right" [size]="19" [width]="2.6" />
+      </button>
+      <p class="footnote">Everyone gets a new person to name — latecomers included.</p>
+    } @else if (revealed() && store.isHost()) {
+      <p class="footnote">A new round needs at least {{ minPlayers() }} players in the room.</p>
+    } @else if (revealed()) {
+      <p class="footnote">{{ host() }} deals the next round.</p>
+    } @else {
+      <p class="footnote">{{ host() }} flips every card when you're done guessing.</p>
+    }
+  </div>
+}

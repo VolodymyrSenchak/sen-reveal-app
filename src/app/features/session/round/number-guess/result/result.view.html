@@ -1,0 +1,96 @@
+@if (round(); as round) {
+  <div class="screen">
+    <app-session-top
+      [code]="store.code() ?? ''"
+      [subtitle]="'Round ' + round.number + ' · result'"
+      [banner]="banner()"
+      [pollIntervalMs]="store.pollIntervalMs()"
+      [toast]="toast()"
+      (exit)="exit.emit()"
+    />
+
+    <section class="answer">
+      <div class="answer__label">
+        <app-icon name="check" [size]="18" [width]="2.6" />
+        <span>The right answer</span>
+      </div>
+      <p class="answer__value mono">{{ format(round.correctAnswer ?? 0) }}</p>
+      @if (round.question) {
+        <p class="answer__question">{{ round.question }}</p>
+      }
+    </section>
+
+    <p class="result__verdict">{{ verdict() }}</p>
+
+    <ul class="result__cards">
+      @for (guess of ranked(); track guess.playerId) {
+        <li
+          class="rank"
+          [class.rank--best]="isWinner()(guess.playerId)"
+          [class.rank--worst]="isLoser()(guess.playerId)"
+        >
+          <app-avatar [nickname]="nameOf()(guess.playerId)" [size]="30" />
+          <div class="rank__text">
+            <div class="rank__name">
+              {{ nameOf()(guess.playerId) }}
+              @if (guess.playerId === store.me()?.playerId) {
+                <span class="rank__you">(you)</span>
+              }
+            </div>
+            <div class="rank__off">off by {{ format(guess.distance ?? 0) }}</div>
+          </div>
+          <span class="rank__value mono">{{ format(guess.value) }}</span>
+          @if (isWinner()(guess.playerId)) {
+            <span class="tag tag--ready">Closest</span>
+          } @else if (isLoser()(guess.playerId)) {
+            <span class="tag rank__tagWorst">Furthest</span>
+          }
+        </li>
+      }
+    </ul>
+
+    <section class="board">
+      <div class="field-row">
+        <h2 class="board__title">Scoreboard</h2>
+        <span class="board__meta">Circle {{ circle() }} · {{ askedCount() }} of {{ board().length }} have asked</span>
+      </div>
+
+      <div class="board__row board__row--head">
+        <span class="board__player">Player</span>
+        <span class="board__cell">Best</span>
+        <span class="board__cell">Worst</span>
+        <span class="board__cell">Asks</span>
+      </div>
+
+      @for (score of board(); track score.playerId) {
+        <div class="board__row">
+          <span class="board__player">
+            {{ nameOf()(score.playerId) }}
+            @if (score.playerId === store.me()?.playerId) {
+              <span class="board__you">(you)</span>
+            }
+          </span>
+          <span class="board__cell mono" [class.board__cell--best]="score.wins > 0">{{ score.wins }}</span>
+          <span class="board__cell mono" [class.board__cell--worst]="score.losses > 0">{{ score.losses }}</span>
+          <span class="board__cell mono">{{ score.turns }}</span>
+        </div>
+      }
+    </section>
+
+    <div class="spacer"></div>
+
+    @if (round.canGoNext) {
+      <button class="btn btn--primary" type="button" (click)="act.emit(nextRound())">
+        Next round
+        <app-icon name="arrow-right" [size]="19" [width]="2.6" />
+      </button>
+      <p class="footnote">Only you can move on — everyone else keeps the result on screen until you do.</p>
+    } @else {
+      <p class="footnote">{{ asker() }} moves the circle on. Sit tight.</p>
+    }
+
+    @if (store.game()?.canSkipRound && !round.canGoNext) {
+      <button class="btn btn--quiet" type="button" (click)="act.emit(skipRound())">Skip ahead</button>
+    }
+  </div>
+}

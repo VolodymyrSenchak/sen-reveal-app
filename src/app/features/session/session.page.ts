@@ -8,17 +8,17 @@ import { SessionStore } from '../../session/session.store';
 import { TransportManager } from '../../session/transport.manager';
 import { EndedView } from './ended.view';
 import { LobbyView } from './lobby/lobby.view';
-import { NumberGuessAskView } from './round/number-guess/ask.view';
-import { NumberGuessGuessView } from './round/number-guess/guess.view';
-import { NumberGuessResultView } from './round/number-guess/result.view';
-import { NumberGuessRevealView } from './round/number-guess/reveal.view';
+import { NumberGuessAskView } from './round/number-guess/ask/ask.view';
+import { NumberGuessGuessView } from './round/number-guess/guess/guess.view';
+import { NumberGuessResultView } from './round/number-guess/result/result.view';
+import { NumberGuessRevealView } from './round/number-guess/reveal/reveal.view';
 import { PausedView } from './paused.view';
-import { AnswerView } from './round/sen-reveal/answer.view';
-import { AskView } from './round/sen-reveal/ask.view';
-import { ResultView } from './round/sen-reveal/result.view';
-import { RevealView } from './round/sen-reveal/reveal.view';
-import { WhoAmIBoardView } from './round/who-am-i/board.view';
-import { WhoAmINameView } from './round/who-am-i/name.view';
+import { AnswerView } from './round/sen-reveal/answer/answer.view';
+import { AskView } from './round/sen-reveal/ask/ask.view';
+import { ResultView } from './round/sen-reveal/result/result.view';
+import { RevealView } from './round/sen-reveal/reveal/reveal.view';
+import { WhoAmIBoardView } from './round/who-am-i/board/board.view';
+import { WhoAmINameView } from './round/who-am-i/name/name.view';
 import { pickScreen } from './screen';
 
 

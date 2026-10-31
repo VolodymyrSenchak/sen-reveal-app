@@ -1,0 +1,64 @@
+@if (round(); as round) {
+  <div class="screen">
+    <app-session-top
+      [code]="store.code() ?? ''"
+      [subtitle]="'Round ' + round.number + ' · naming'"
+      [banner]="banner()"
+      [pollIntervalMs]="store.pollIntervalMs()"
+      [toast]="toast()"
+      (exit)="exit.emit()"
+    />
+
+    <div class="card--accent name__turn">
+      <app-icon name="person" [size]="26" [width]="2.3" />
+      <div>
+        <div class="name__turnTitle">Who is {{ target() }}?</div>
+        <div class="name__turnCopy">
+          Pick someone everyone knows — real or made up. {{ target() }} won't see it. Everyone else will.
+        </div>
+      </div>
+    </div>
+
+    <section class="name__target">
+      <app-avatar [nickname]="target()" [size]="52" />
+      <div>
+        <div class="eyebrow">You are naming</div>
+        <div class="name__targetName">{{ target() }}</div>
+      </div>
+    </section>
+
+    <div class="stack">
+      <div class="field-row">
+        <label class="label" for="famous">Their secret identity</label>
+        <span class="counter">{{ draft().length }}/{{ nameMax }}</span>
+      </div>
+      <input
+        id="famous"
+        class="input"
+        type="text"
+        autocomplete="off"
+        placeholder="Sherlock Holmes"
+        [attr.maxlength]="nameMax"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+        (keydown.enter)="submit()"
+      />
+      <span class="hint">Once it's in it's stuck — no take-backs.</span>
+    </div>
+
+    <app-answers-progress
+      [eligible]="round.eligiblePlayerIds"
+      [answered]="round.answeredPlayerIds"
+      [nameOf]="store.nicknameOf()"
+      title="Names in"
+      waiting="is thinking…"
+    />
+
+    <div class="spacer"></div>
+
+    <button class="btn btn--primary" type="button" [disabled]="!canSend()" (click)="submit()">
+      Stick it on {{ target() }}
+    </button>
+    <p class="footnote">Then you see every card on the table — except the one on you.</p>
+  </div>
+}

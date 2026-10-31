@@ -1,0 +1,71 @@
+@if (round(); as round) {
+  <div class="screen">
+    <app-session-top
+      [code]="store.code() ?? ''"
+      [subtitle]="'Round ' + round.number + ' · Circle ' + circle()"
+      [banner]="banner()"
+      [pollIntervalMs]="store.pollIntervalMs()"
+      [toast]="toast()"
+      (exit)="exit.emit()"
+    />
+
+    <section class="question" [class.question--outLoud]="!round.question">
+      <div class="question__asker">
+        <app-avatar [nickname]="asker()" [isHost]="true" [size]="34" />
+        <span class="question__askerName">
+          {{ round.question ? asker() + ' asks' : 'No question typed' }}
+        </span>
+      </div>
+      <p class="question__text">
+        {{ round.question ?? asker() + ' is asking out loud — listen up.' }}
+      </p>
+    </section>
+
+    @if (round.canSubmitAnswer) {
+      <div class="stack">
+        <div class="field-row">
+          <label class="label" for="answer">Your answer</label>
+          <span class="counter">{{ draft().length }}/{{ answerMax() }}</span>
+        </div>
+        <textarea
+          id="answer"
+          class="textarea answer__input"
+          rows="4"
+          [attr.maxlength]="answerMax()"
+          [value]="draft()"
+          (input)="draft.set($any($event.target).value)"
+        ></textarea>
+      </div>
+
+      <div class="card card--quiet answer__seal">
+        <app-icon name="lock" [size]="19" [width]="2.2" class="answer__sealIcon" />
+        <span>
+          Sealed until {{ asker() }} reveals. Not even {{ asker() }} can read it before then — and you can
+          rewrite it right up to the moment.
+        </span>
+      </div>
+    } @else {
+      <div class="card card--dashed answer__watching">
+        <app-icon name="lock" [size]="19" [width]="2.2" />
+        <span>You are not answering this round. {{ asker() }} reveals when everyone is in.</span>
+      </div>
+    }
+
+    <app-answers-progress
+      [eligible]="round.eligiblePlayerIds"
+      [answered]="round.answeredPlayerIds"
+      [nameOf]="store.nicknameOf()"
+    />
+
+    <div class="spacer"></div>
+
+    @if (round.canSubmitAnswer) {
+      <button class="btn btn--primary" type="button" [disabled]="!canSend()" (click)="submit()">
+        {{ round.myAnswer ? 'Change my answer' : 'Lock in my answer' }}
+      </button>
+      <p class="footnote">
+        {{ round.myAnswer ? 'Already in. Rewrite it any time before the reveal.' : 'Once it’s in, this turns into “Change my answer”.' }}
+      </p>
+    }
+  </div>
+}

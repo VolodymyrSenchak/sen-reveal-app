@@ -1,0 +1,94 @@
+.reveal__question {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 15px;
+  border-radius: var(--r-field);
+  background: var(--card);
+  border: 1.5px solid var(--line);
+}
+
+.reveal__questionText {
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.reveal__title {
+  font-size: 26px;
+  letter-spacing: -0.6px;
+}
+
+.reveal__lede {
+  margin-top: 3px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.reveal__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Reveals land, they don't slide: one card after another, 180 ms each. */
+.guessCard {
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--card);
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: land var(--t-reveal) ease-out backwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes land {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.guessCard__name {
+  flex-grow: 1;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.guessCard__value {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.reveal__answer {
+  height: 66px;
+  border: 2px solid var(--go);
+  border-radius: var(--r-card);
+  font-size: 30px;
+  letter-spacing: -0.5px;
+  text-align: center;
+  appearance: textfield;
+}
+
+.reveal__answer.input--invalid {
+  border-color: var(--worst);
+}
+
+.reveal__answer::-webkit-outer-spin-button,
+.reveal__answer::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}

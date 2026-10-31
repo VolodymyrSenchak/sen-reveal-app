@@ -1,0 +1,84 @@
+@if (round(); as round) {
+  <div class="screen">
+    <app-session-top
+      [code]="store.code() ?? ''"
+      [subtitle]="'Round ' + round.number + ' · Circle ' + circle()"
+      [banner]="banner()"
+      [pollIntervalMs]="store.pollIntervalMs()"
+      [toast]="toast()"
+      (exit)="exit.emit()"
+    />
+
+    <section class="question" [class.question--outLoud]="!round.question">
+      <div class="question__asker">
+        <app-avatar [nickname]="asker()" [isHost]="true" [size]="34" />
+        <span class="question__askerName">
+          {{ round.question ? asker() + ' asks' : 'No question typed' }}
+        </span>
+      </div>
+      <p class="question__text">
+        {{ round.question ?? asker() + ' is asking out loud — listen up.' }}
+      </p>
+    </section>
+
+    @if (round.canSubmitAnswer) {
+      <div class="stack">
+        <label class="label" for="guess">Your number</label>
+        <input
+          id="guess"
+          class="input guess__input mono"
+          type="number"
+          inputmode="decimal"
+          autocomplete="off"
+          step="any"
+          placeholder="0"
+          [class.input--invalid]="!!error()"
+          [value]="draft()"
+          (input)="draft.set($any($event.target).value)"
+          (keydown.enter)="submit()"
+        />
+        @if (error(); as message) {
+          <span class="field-error">{{ message }}</span>
+        } @else {
+          <span class="hint">A whole number or a decimal. Closest to the right answer wins the round.</span>
+        }
+      </div>
+
+      <div class="card card--quiet guess__seal">
+        <app-icon name="lock" [size]="19" [width]="2.2" class="guess__sealIcon" />
+        <span>
+          Sealed until {{ asker() }} reveals. Not even {{ asker() }} can see it before then — and you can change
+          it right up to the moment.
+        </span>
+      </div>
+    } @else {
+      <div class="card card--dashed guess__watching">
+        <app-icon name="lock" [size]="19" [width]="2.2" />
+        <span>You are not guessing this round. {{ asker() }} reveals when everyone is in.</span>
+      </div>
+    }
+
+    <app-answers-progress
+      [eligible]="round.eligiblePlayerIds"
+      [answered]="round.answeredPlayerIds"
+      [nameOf]="store.nicknameOf()"
+      title="Numbers in"
+      waiting="is picking a number…"
+    />
+
+    <div class="spacer"></div>
+
+    @if (round.canSubmitAnswer) {
+      <button class="btn btn--primary" type="button" [disabled]="!canSend()" (click)="submit()">
+        {{ round.myGuess !== null ? 'Change my number' : 'Lock in my number' }}
+      </button>
+      <p class="footnote">
+        @if (round.myGuess !== null) {
+          {{ formatNumber(round.myGuess) }} is in. Change it any time before the reveal.
+        } @else {
+          Once it’s in, this turns into “Change my number”.
+        }
+      </p>
+    }
+  </div>
+}

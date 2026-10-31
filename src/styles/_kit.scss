@@ -45,6 +45,11 @@
   color: var(--text);
 }
 
+.btn--secondary:disabled {
+  border-color: var(--line);
+  color: var(--dim);
+}
+
 .btn--danger {
   height: 52px;
   background: transparent;

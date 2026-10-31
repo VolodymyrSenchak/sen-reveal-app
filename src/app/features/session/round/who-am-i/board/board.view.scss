@@ -1,0 +1,110 @@
+.board__title {
+  font-size: 26px;
+  letter-spacing: -0.6px;
+}
+
+.board__lede {
+  margin-top: 3px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.board__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.whoCard {
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--card);
+  padding: 13px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.whoCard--hidden,
+.whoCard--empty {
+  border-style: dashed;
+  border-color: var(--line-strong);
+  background: transparent;
+}
+
+/* The one card the viewer has been waiting all round to see. */
+.whoCard--mine {
+  border: none;
+  background: var(--go);
+  color: var(--room);
+  animation: land var(--t-reveal) ease-out backwards;
+}
+
+@keyframes land {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.whoCard__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.whoCard__player {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.whoCard__you {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.whoCard__name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  overflow-wrap: anywhere;
+}
+
+.whoCard__from {
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.whoCard--mine .whoCard__from {
+  color: inherit;
+  opacity: 0.75;
+}
+
+.whoCard__hiddenBody {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.whoCard__missing {
+  font-size: 13.5px;
+  color: var(--faint);
+}

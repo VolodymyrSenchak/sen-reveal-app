@@ -263,7 +263,7 @@ Note `'paused'` — `round` is `null` when fewer than 3 active players remain mi
 | Screen | Design | Key bindings |
 |---|---|---|
 | lobby | `Lobby.dc.html` | `code`, `players` + `isOnline`, `settings.maxPlayers`, `expiresAt` countdown, `isHost` → Start (`lobby.start`), kick, transfer host |
-| ask | `RoundActive.dc.html` | `round.question` ↔ `setQuestion` (debounced ~500 ms), `answeredPlayerIds` vs `eligiblePlayerIds`, `canReveal` → primary, `canForceReveal` → "Reveal without X", `canSkipRound` → skip |
+| ask | `RoundActive.dc.html` | `round.question` ↔ `setQuestion` (sent by the "Show question" button, the draft stays local until then), `answeredPlayerIds` vs `eligiblePlayerIds`, `canReveal` → primary, `canForceReveal` → "Reveal without X", `canSkipRound` → skip |
 | answer | `RoundAnswer.dc.html` | `question` or the out-loud placeholder, `myAnswer` seeds the textarea, `canSubmitAnswer` → submit, progress from `answeredPlayerIds` |
 | reveal | `Revealed.dc.html` | `answers` (all, now visible), `canPickResult` → Best/Worst selection + Confirm; non-askers see the same cards with "Vova is picking" |
 | result | `Result.dc.html` | `winnerId` / `loserId` / `answers`, `scoreboard`, `circle.number`, `canGoNext` → Next round |
