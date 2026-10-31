@@ -1,0 +1,61 @@
+.join__title {
+  font-size: 32px;
+  letter-spacing: -0.9px;
+}
+
+.join__lede {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.join__codeBlock {
+  gap: 10px;
+}
+
+.join__digits {
+  display: flex;
+  gap: 8px;
+}
+
+.join__digit {
+  width: 100%;
+  min-width: 0;
+  height: 68px;
+  padding: 0;
+  text-align: center;
+  border-radius: var(--r-field);
+  background: var(--card);
+  border: 1.5px solid var(--line-strong);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.join__digit--filled {
+  border-color: var(--go);
+  border-width: 2px;
+}
+
+.join__digit--invalid {
+  border-color: var(--worst);
+}
+
+.join__found {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--go);
+}
+
+.join__lockRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.join__lockIcon {
+  color: var(--muted);
+}

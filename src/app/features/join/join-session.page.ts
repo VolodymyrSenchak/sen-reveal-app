@@ -17,171 +17,19 @@ const CODE_LENGTH = 6;
   selector: 'app-join-session',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormField, IconComponent, PageHeaderComponent],
-  template: `
-    <form class="screen" (submit)="submit($event)">
-      <app-page-header step="Join a room" backTo="/" backLabel="Back to home" />
-
-      <div class="stack">
-        <h1 class="join__title">Got a code?</h1>
-        <p class="join__lede">Six digits from whoever started the game. Leading zeros count.</p>
-      </div>
-
-      <div class="stack join__codeBlock">
-        <label class="label" for="code-0">Session code</label>
-        <div class="join__digits">
-          @for (digit of digits(); track $index) {
-            <input
-              #digitInput
-              class="join__digit"
-              [class.join__digit--filled]="digit !== ''"
-              [class.join__digit--invalid]="codeError() !== null"
-              [id]="'code-' + $index"
-              type="text"
-              inputmode="numeric"
-              autocomplete="one-time-code"
-              maxlength="1"
-              [attr.aria-label]="'Code digit ' + ($index + 1)"
-              [value]="digit"
-              (input)="onDigit($index, $event)"
-              (keydown)="onDigitKey($index, $event)"
-              (paste)="onPaste($event)"
-            />
-          }
-        </div>
-        @if (codeError(); as message) {
-          <span class="field-error">{{ message }}</span>
-        } @else if (info(); as room) {
-          <div class="join__found">
-            <app-icon name="check" [size]="15" [width]="2.4" />
-            <span>{{ gameLabel(room) }} · {{ room.playerCount }} of {{ room.maxPlayers }} inside</span>
-          </div>
-        } @else if (looking()) {
-          <span class="hint">Looking for that room…</span>
-        }
-      </div>
-
-      <div class="stack">
-        <label class="label" for="joinnick">Your nickname</label>
-        <input
-          id="joinnick"
-          class="input"
-          type="text"
-          autocomplete="nickname"
-          [class.input--invalid]="nicknameError() !== null || nicknameServerError() !== null"
-          [formField]="f.nickname"
-        />
-        @if (nicknameError(); as message) {
-          <span class="field-error">{{ message }}</span>
-        } @else if (nicknameServerError(); as message) {
-          <span class="field-error">{{ message }}</span>
-        }
-      </div>
-
-      @if (info()?.requiresPassword) {
-        <div class="stack">
-          <div class="join__lockRow">
-            <app-icon name="lock" [size]="15" [width]="2.2" class="join__lockIcon" />
-            <label class="label" for="joinpass">This room is locked</label>
-          </div>
-          <input
-            id="joinpass"
-            class="input input--mono"
-            type="password"
-            autocomplete="current-password"
-            [class.input--invalid]="passwordError() !== null"
-            [formField]="f.password"
-          />
-          @if (passwordError(); as message) {
-            <span class="field-error">{{ message }}</span>
-          }
-        </div>
-      }
-
-      @if (toast(); as message) {
-        <p class="toast toast--error" role="alert">{{ message }}</p>
-      }
-
-      <div class="spacer"></div>
-
-      <button class="btn btn--primary" type="submit" [disabled]="busy()">
-        {{ busy() ? 'Joining…' : 'Join the session' }}
-      </button>
-      <p class="footnote">
-        You can walk in after the game has already started — you'll be dealt into the current circle.
-      </p>
-    </form>
-  `,
-  styles: `
-    .join__title {
-      font-size: 32px;
-      letter-spacing: -0.9px;
-    }
-
-    .join__lede {
-      font-size: 15px;
-      line-height: 1.45;
-      color: var(--muted);
-    }
-
-    .join__codeBlock {
-      gap: 10px;
-    }
-
-    .join__digits {
-      display: flex;
-      gap: 8px;
-    }
-
-    .join__digit {
-      width: 100%;
-      min-width: 0;
-      height: 68px;
-      padding: 0;
-      text-align: center;
-      border-radius: var(--r-field);
-      background: var(--card);
-      border: 1.5px solid var(--line-strong);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 26px;
-      font-weight: 700;
-    }
-
-    .join__digit--filled {
-      border-color: var(--go);
-      border-width: 2px;
-    }
-
-    .join__digit--invalid {
-      border-color: var(--worst);
-    }
-
-    .join__found {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 13px;
-      color: var(--go);
-    }
-
-    .join__lockRow {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .join__lockIcon {
-      color: var(--muted);
-    }
-  `,
+  templateUrl: './join-session.page.html',
+  styleUrl: './join-session.page.scss',
 })
 export class JoinSessionPage {
   private readonly api = inject(SessionApiService);
   private readonly identity = inject(IdentityService);
   private readonly router = inject(Router);
 
-  /** `withComponentInputBinding()` hands us `?code=042137` straight from the query string. */
-  readonly code = input<string>('');
+  /**
+   * `withComponentInputBinding()` hands us `?code=042137` straight from the query string, and
+   * `undefined` without one: the router writes over any default set here.
+   */
+  readonly code = input<string>();
 
 
   private readonly inputs = viewChildren<ElementRef<HTMLInputElement>>('digitInput');
@@ -215,7 +63,7 @@ export class JoinSessionPage {
   constructor() {
     // prefill from the shared link, once
     effect(() => {
-      const prefill = this.code().replace(/\D/g, '').slice(0, CODE_LENGTH);
+      const prefill = (this.code() ?? '').replace(/\D/g, '').slice(0, CODE_LENGTH);
       if (!prefill) {
         return;
       }
