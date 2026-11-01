@@ -16,8 +16,17 @@ export interface SenRevealRoundView extends RoundViewBase {
   myAnswer: string | null;
   /** All answers, and only after the reveal. An array, ordered, so the ETag is deterministic. */
   answers: SenRevealAnswerView[] | null;
+  /** While `revealed`: the asker's picks so far. */
   winnerId: string | null;
   loserId: string | null;
+  /** The next `setPicks` must carry a higher `seq` than this. */
+  picksSeq: number;
+  /** Blind picks: no names on the answers. The ids stay available; only the UI hides them. */
+  namesHidden: boolean;
+  /** Blind picks: the names are out, so the picks can no longer change. */
+  picksLocked: boolean;
+  canSetPicks: boolean;
+  canShowNames: boolean;
   canPickResult: boolean;
 }
 

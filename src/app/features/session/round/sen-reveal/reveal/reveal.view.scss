@@ -113,3 +113,20 @@
   color: var(--room);
   font-weight: 700;
 }
+
+/* The picks as read-only labels, for whoever has no buttons to look at. */
+.pickTag {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  color: var(--room);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pickTag--best {
+  background: var(--go);
+}
+
+.pickTag--worst {
+  background: var(--worst);
+}

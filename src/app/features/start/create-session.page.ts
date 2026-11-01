@@ -104,6 +104,26 @@ import { PageHeaderComponent } from '../../ui/page-header';
             <span class="toggle__knob"></span>
           </button>
         </div>
+
+        @if (isSenReveal()) {
+          <div class="create__row create__row--boxed">
+            <div class="create__rowText">
+              <div class="create__rowTitle">Blind picks</div>
+              <div class="hint">The asker picks the best and worst without seeing who wrote what. Names appear after the picks.</div>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              [attr.aria-checked]="f.blindPicks().value()"
+              aria-label="Blind picks"
+              class="toggle"
+              [class.toggle--on]="f.blindPicks().value()"
+              (click)="f.blindPicks().value.set(!f.blindPicks().value())"
+            >
+              <span class="toggle__knob"></span>
+            </button>
+          </div>
+        }
       </div>
 
       @if (serverError() === 'toast') {
@@ -235,6 +255,7 @@ export class CreateSessionPage implements OnInit {
   protected readonly minPlayers = MIN_PLAYERS;
 
   protected readonly title = computed(() => gameInfo(this.gameType())?.title ?? '');
+  protected readonly isSenReveal = computed(() => this.gameType() === 'sen-reveal');
 
   ngOnInit(): void {
     // a hand-typed /start/whatever has no game to create; send them back to the choice
@@ -254,6 +275,7 @@ export class CreateSessionPage implements OnInit {
     password: '',
     maxPlayers: MAX_PLAYERS,
     allowJoinInProgress: true,
+    blindPicks: false,
   });
 
   protected readonly f = form(this.model, (path) => {
@@ -284,7 +306,7 @@ export class CreateSessionPage implements OnInit {
       return;
     }
 
-    const { nickname, password, maxPlayers, allowJoinInProgress } = this.model();
+    const { nickname, password, maxPlayers, allowJoinInProgress, blindPicks } = this.model();
     const trimmed = nickname.trim();
     this.busy.set(true);
     try {
@@ -293,7 +315,7 @@ export class CreateSessionPage implements OnInit {
           gameType: this.gameType(),
           nickname: trimmed,
           ...(this.usePassword() && password ? { password } : {}),
-          settings: { maxPlayers, allowJoinInProgress },
+          settings: { maxPlayers, allowJoinInProgress, ...(this.isSenReveal() ? { blindPicks } : {}) },
         }),
       );
       this.identity.save({

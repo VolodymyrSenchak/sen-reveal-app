@@ -8,8 +8,9 @@ import { AvatarComponent } from '../../../../../ui/avatar';
 import { SessionTopComponent } from '../../../../../ui/session-top';
 
 /**
- * Revealed.dc.html — `phase: 'revealed'`. Everyone sees the same cards; only the asker
- * (`canPickResult`) gets the Best / Worst buttons and the confirm.
+ * Revealed.dc.html — `phase: 'revealed'`. Everyone sees the same cards and the picks as they land;
+ * only the asker gets the Best / Worst buttons (`canSetPicks`) and the confirm (`canPickResult`).
+ * With blind picks the cards start without names, and `canShowNames` comes before the confirm.
  */
 @Component({
   selector: 'app-reveal-view',
@@ -34,15 +35,25 @@ export class RevealView {
   protected readonly nameOf = computed(() => this.store.nicknameOf());
   protected readonly answers = computed(() => this.round()?.answers ?? []);
 
-  /** Cleared when the round moves on, so a new reveal never starts with last round's picks. */
-  protected readonly winnerId = seededSignal<number, string | null>(
-    () => this.round()?.number ?? 0,
-    () => null,
+  /**
+   * The asker's taps stay local so they feel instant; only a new round or a lost answer resets them.
+   * Everyone else, and the asker once the picks are locked, follows the server.
+   */
+  private readonly picksKey = computed(() => {
+    const round = this.round();
+    const base = `${round?.number ?? 0}:${this.answers().length}`;
+    return round?.canSetPicks ? base : `${base}:${round?.winnerId}:${round?.loserId}`;
+  });
+  protected readonly winnerId = seededSignal<string, string | null>(
+    () => this.picksKey(),
+    () => this.round()?.winnerId ?? null,
   );
-  protected readonly loserId = seededSignal<number, string | null>(
-    () => this.round()?.number ?? 0,
-    () => null,
+  protected readonly loserId = seededSignal<string, string | null>(
+    () => this.picksKey(),
+    () => this.round()?.loserId ?? null,
   );
+
+  private picksSeq = 0;
 
   /** With a single answer the loser may be null; otherwise both are required and distinct. */
   protected readonly canConfirm = computed(() => {
@@ -54,8 +65,14 @@ export class RevealView {
   });
 
   protected readonly confirmHint = computed(() => {
+    const round = this.round();
+    if (round?.picksLocked) {
+      return 'Everyone can see the names now. Confirm to go to the results.';
+    }
     if (this.canConfirm()) {
-      return 'Final — no take-backs. Everyone else just reads the cards and waits for you.';
+      return round?.canShowNames
+        ? 'This locks your picks and shows everyone who wrote what.'
+        : 'Final — no take-backs. Everyone else is watching your picks.';
     }
     if (!this.winnerId()) {
       return 'Pick the best one first.';
@@ -68,12 +85,25 @@ export class RevealView {
     if (this.loserId() === playerId) {
       this.loserId.set(null);
     }
+    this.sendPicks();
   }
 
   protected pickWorst(playerId: string): void {
     this.loserId.set(this.loserId() === playerId ? null : playerId);
     if (this.winnerId() === playerId) {
       this.winnerId.set(null);
+    }
+    this.sendPicks();
+  }
+
+  private sendPicks(): void {
+    this.picksSeq = Math.max(this.picksSeq, this.round()?.picksSeq ?? 0) + 1;
+    this.act.emit(SenReveal.setPicks(this.winnerId(), this.loserId(), this.picksSeq));
+  }
+
+  protected showNames(): void {
+    if (this.canConfirm()) {
+      this.act.emit(SenReveal.showNames());
     }
   }
 

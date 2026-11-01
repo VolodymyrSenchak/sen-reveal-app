@@ -14,6 +14,16 @@ export const SenReveal = {
   setQuestion: (text: string): GameAction => ({ type: 'sen-reveal.setQuestion', payload: { text } }),
   submitAnswer: (value: string): GameAction => ({ type: 'sen-reveal.submitAnswer', payload: { value } }),
   reveal: (force = false): GameAction => ({ type: 'sen-reveal.reveal', payload: { force } }),
+  /**
+   * The picks in progress, shown live on everyone's cards. Nothing is scored until `pickResult`.
+   * `seq` goes up with every tap, so a quick tap that overtakes the one before it still wins.
+   */
+  setPicks: (winnerId: string | null, loserId: string | null, seq: number): GameAction => ({
+    type: 'sen-reveal.setPicks',
+    payload: { winnerId, loserId, seq },
+  }),
+  /** Blind picks only. Puts the names on the cards and locks the picks. */
+  showNames: (): GameAction => ({ type: 'sen-reveal.showNames', payload: {} }),
   pickResult: (winnerId: string, loserId: string | null): GameAction => ({
     type: 'sen-reveal.pickResult',
     payload: { winnerId, loserId },
