@@ -11,6 +11,6 @@ import { PageHeaderComponent } from '../../ui/page-header';
 })
 export class PrivacyPage {
   protected readonly updated = '4 November 2026';
-  // TODO: the address people write to for deletion requests; Play shows the developer email publicly too
-  protected readonly contactEmail = 'CONTACT_EMAIL';
+  // where deletion requests go; the same address as the Play developer contact
+  protected readonly contactEmail = 'volodymyr.senchak.dev@gmail.com';
 }
