@@ -249,6 +249,8 @@
 
 /* ---------- avatar ---------- */
 .avatar {
+  /* a <span>: inline would ignore the width and shrink to the letter */
+  display: block;
   position: relative;
   width: 40px;
   height: 40px;
