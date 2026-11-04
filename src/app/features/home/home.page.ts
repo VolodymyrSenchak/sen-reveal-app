@@ -78,6 +78,7 @@ import { IconComponent } from '../../ui/icon';
       <a class="btn btn--primary home__ghost" routerLink="/join">Join with a code</a>
 
       <p class="footnote">Six digits is all anyone needs to get in. Same room, same sofa, different screens.</p>
+      <a class="footnote home__privacy" routerLink="/privacy">Privacy policy</a>
     </div>
   `,
   styles: `
@@ -168,6 +169,11 @@ import { IconComponent } from '../../ui/icon';
     .home__ghost:hover {
       background: transparent;
       border-color: var(--go);
+    }
+
+    .home__privacy {
+      margin-top: -8px;
+      text-decoration: underline;
     }
   `,
 })

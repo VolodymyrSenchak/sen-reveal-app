@@ -24,5 +24,10 @@ export const routes: Routes = [
     path: 's/:code',
     loadComponent: () => import('./features/session/session.page').then((m) => m.SessionPage),
   },
+  {
+    // linked from the Play Store listing
+    path: 'privacy',
+    loadComponent: () => import('./features/privacy/privacy.page').then((m) => m.PrivacyPage),
+  },
   { path: '**', redirectTo: '' },
 ];

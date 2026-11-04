@@ -1,0 +1,45 @@
+.privacy__title {
+  font-size: 32px;
+  letter-spacing: -0.9px;
+}
+
+.privacy__meta {
+  font-size: 13px;
+  color: var(--faint);
+}
+
+.privacy__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 16px 18px 16px 34px;
+  border-radius: var(--r-card);
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+.privacy__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.privacy__section h2 {
+  font-size: 20px;
+  color: var(--text);
+}
+
+.privacy__section ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding-left: 20px;
+}

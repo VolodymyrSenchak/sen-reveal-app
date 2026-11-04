@@ -1,0 +1,98 @@
+<article class="screen">
+  <app-page-header step="Privacy" backTo="/" backLabel="Back to home" />
+
+  <div class="stack">
+    <h1 class="privacy__title">Privacy policy</h1>
+    <p class="privacy__meta">Last updated {{ updated }}</p>
+  </div>
+
+  <ul class="privacy__summary">
+    <li>No accounts, no ads, no analytics, no tracking.</li>
+    <li>We keep only what you type into a game: your nickname and your moves.</li>
+    <li>A room closes 24 hours after it is created.</li>
+    <li>Your phone remembers which rooms you are in, in local storage. No cookies.</li>
+  </ul>
+
+  <section class="privacy__section">
+    <h2>What we store on our server</h2>
+    <p>When you create or join a room, the room's record in our database holds:</p>
+    <ul>
+      <li>the nickname you enter;</li>
+      <li>what you enter while playing: questions, answers, guesses and picks;</li>
+      <li>scores and the history of the rounds;</li>
+      <li>a hash of your player token, never the token itself;</li>
+      <li>the room password, if the host set one, only as a salted hash;</li>
+      <li>when each player was last seen online.</li>
+    </ul>
+    <p>We do not ask for your real name, email, phone number, location, contacts, camera or microphone.</p>
+  </section>
+
+  <section class="privacy__section">
+    <h2>How long we keep it</h2>
+    <p>
+      A room closes 24 hours after it is created. After that nobody can join it, read it or play in it through
+      SenReveal. The closed record currently stays in the database; it is not shown to anyone, used for anything else
+      or shared. To have it deleted, write to us with the room code and your nickname.
+    </p>
+  </section>
+
+  <section class="privacy__section">
+    <h2>What stays on your device</h2>
+    <p>
+      For every room you join, the app keeps the room code, your player ID, your player token and your nickname in
+      your browser's local storage, plus the last nickname you used, to fill it in next time. That is how the app knows
+      it is you when you come back. Clearing the site's data or uninstalling the app removes it; you can then join
+      again as a new player.
+    </p>
+  </section>
+
+  <section class="privacy__section">
+    <h2>Who can see what you write</h2>
+    <p>
+      The other players in your room see your nickname, and see your answers when the round reveals them — that is the
+      game. Anyone who has the six-digit code (and the password, if there is one) can join while the room is open, so
+      do not write anything you would not say out loud in that room.
+    </p>
+  </section>
+
+  <section class="privacy__section">
+    <h2>Services we rely on</h2>
+    <ul>
+      <li>
+        <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Vercel</a> hosts the site and
+        the game server. Like any web host it processes your IP address and keeps short-lived request logs. We use the
+        IP address only to limit how fast one device can make requests.
+      </li>
+      <li>
+        <a href="https://supabase.com/privacy" target="_blank" rel="noopener">Supabase</a> hosts the database with the
+        room records described above.
+      </li>
+      <li>
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Fonts</a> serves the fonts.
+        Your browser fetches them from Google, which receives your IP address and browser details.
+      </li>
+    </ul>
+    <p>We do not sell or share your data with anyone else.</p>
+  </section>
+
+  <section class="privacy__section">
+    <h2>The Android app</h2>
+    <p>
+      The SenReveal app on Google Play opens this same website in Chrome, as a trusted web activity. Everything on this
+      page applies to it unchanged. It asks for no extra permissions beyond internet access.
+    </p>
+  </section>
+
+  <section class="privacy__section">
+    <h2>Children</h2>
+    <p>SenReveal is not directed at children under 13, and we do not knowingly collect their data.</p>
+  </section>
+
+  <section class="privacy__section">
+    <h2>Changes and contact</h2>
+    <p>
+      If this policy changes, we update this page and the date at the top. Questions or deletion requests:
+      <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>.
+    </p>
+  </section>
+</article>
