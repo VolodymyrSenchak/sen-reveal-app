@@ -125,6 +125,12 @@ import { IconComponent } from '../../ui/icon';
       justify-content: center;
     }
 
+    /* The art takes only the height the rest of the screen leaves, so both buttons fit above the fold. */
+    .home__art svg {
+      height: auto;
+      max-height: max(96px, calc(100dvh - 470px));
+    }
+
     .home__title {
       font-size: 40px;
       line-height: 1.02;
@@ -174,6 +180,31 @@ import { IconComponent } from '../../ui/icon';
     .home__privacy {
       margin-top: -8px;
       text-decoration: underline;
+    }
+
+    /* Short phone screens: tighter rhythm so both buttons stay above the fold. Keep last so it wins. */
+    @media (max-height: 760px) {
+      .home {
+        gap: 12px;
+        padding-top: 18px;
+      }
+
+      .home__title {
+        font-size: 34px;
+      }
+
+      .home__lede {
+        font-size: 14.5px;
+      }
+
+      .home__facts {
+        gap: 6px;
+      }
+
+      .home__facts li {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
     }
   `,
 })
